@@ -1,0 +1,236 @@
+#! /usr/bin/python
+
+import sys, os, re
+import datetime, time
+import shlex as _shlex
+import subprocess as _subprocess
+from optparse import OptionParser
+
+def source(script, update=1):
+    p = _subprocess.Popen(". %s; env" % script, stdout=_subprocess.PIPE, shell=True)
+    data = p.communicate()[0]
+
+    env=dict()
+    #env = dict((line.split("=", 1) for line in data.splitlines()))
+    for line in data.splitlines():
+        param = line.split("=", 1)
+        if (len(param) > 2):
+            env[param[0]]= param[1]
+        
+    if update:
+        os.environ.update(env)
+
+def pipe(cmdline, input = None):
+  """
+  wrapper around subprocess to simplify te interface
+  """
+  args = _shlex.split(cmdline)
+
+  if input is not None:
+    command = _subprocess.Popen(args, stdin = _subprocess.PIPE, stdout = _subprocess.PIPE, stderr = None)
+  else:
+    command = _subprocess.Popen(args, stdin = None, stdout = _subprocess.PIPE, stderr = None)
+
+  (out, err) = command.communicate(input)
+  return out
+
+if __name__ == "__main__":
+    
+    parser = OptionParser(usage="usage: %prog Usage: is ./reduce_batch arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8")
+    parser.add_option("--tag", "-t", action="store", type="string", dest="tag", default="tag", help="tag of the task(jets, hww160, ttbar, ...) [default: %default].")
+    parser.add_option("-a", "--analysis", action="store", type="string", dest="analysisname", default="TapAnalysis", help="analysis name (PhotonAnalysis,...) [default: %default].")
+    parser.add_option("--type", "-T", action="store", type="int", dest="itype", default="0", help="type of the sample [default: %default].")
+    parser.add_option("--seed", "-s", action="store", type="string", dest="rootseed", default="", help="beginning of your filenames to run on")
+    parser.add_option("-i", "--input-dir", action="store", type="string", dest="thedatadirectory", default="/hadoop/cms/store/user/", help="data_directory [default: %default];)");
+    parser.add_option("--dat", "-d", action="store", type="string", dest="datfile", default="", help="comma separated list of dat files (relative to AnalysisScripts)")
+    parser.add_option("-I", "--input_branch", action="store", type="string", dest="inputBranchesFile", default="", help="inputBranches file (relative to AnalysisScripts)")
+    parser.add_option("-O", "--output-branch", action="store", type="string", dest="outputBranchesFile", default="", help="outputBranches file (relative to AnalysisScripts)");
+    parser.add_option("--eth", action="store_true", default=False, help="to process samples at ETH [default: %default].")
+    parser.add_option("--ucsd", action="store_true", default=False, help="to process samples at UCSD [default: %default].")
+    parser.add_option("-n", action="store", type="int", dest="numberofjobs", default="0", help="number of jobs of the task.")
+    
+    (options, args) = parser.parse_args()
+
+    #if len(args) < 8:
+    #    parser.print_usage()
+    #    raise RuntimeError("Need exactly nine arguements to work.")
+    options.eosLs = "/afs/cern.ch/project/eos/installation/0.3.1-22/bin/eos.select root://eoscms ls -l /eos/cms"
+    print "\nPreparing batch reduction...\n"
+
+    os.system("rm -rf "+options.tag)
+    os.system("mkdir "+options.tag)
+
+    if (options.eth):
+        for i in xrange(0, 10):
+            os.system("srmls -2 -count=500 -offset="+ str(i*500) + " srm://storage01.lcg.cscs.ch:8443/srm/managerv2?SFN=" + options.thedatadirectory + " | grep -v 512 >> "+options.tag+"/allfilenames.txt")
+    elif (options.ucsd):
+        #for i in xrange(0, 10):
+        os.system("lcg-ls -l -b -D srmv2 \"srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN="+options.thedatadirectory + "\" >> " +options.tag+"/allfilenames.txt")
+            #os.system("srmls -2 -count=500 -offset="+ str(i*500) + " srm://bsrm-3.t2.ucsd.edu:8443/srm/managerv2?SFN=" + options.thedatadirectory + " | grep -v 512 >> "+options.tag+"/allfilenames.txt")
+    else:
+        os.system(options.eosLs+options.thedatadirectory + " > " + options.tag+"/allfilenames.txt")
+        
+    totalfiles = pipe("wc -l "+options.tag+"/allfilenames.txt")
+    totalfiles = int(totalfiles.split(" ")[0])
+    if (totalfiles == 0):
+        print "no files ??"
+        sys.exit(-5)
+        
+    #*************************************************************************************
+    totalsizelimit = 10000000000
+    file = open(options.tag+"/allfilenames.txt")
+    temp = file.readlines()
+    file.close()
+    totalfilesize = 0
+    file_names = []
+    for l in temp:
+        line = l.split()
+        if (len(line) > 0):
+            if (options.eth):
+                totalfilesize += int(line[0])
+                file_names.append(line[1])
+            elif (options.ucsd):
+                totalfilesize += int(line[4])
+                file_names.append(line[6])
+            else:
+                totalfilesize += int(line[4])
+                file_names.append(line[8])
+            
+    if (options.numberofjobs > totalfiles):
+        options.numberofjobs = totalfiles
+        
+    if (options.numberofjobs == 0):
+        options.numberofjobs = totalfilesize/totalsizelimit + 1
+        
+    avgfilesize  = totalfilesize/totalfiles
+    filesperjob  = totalfiles/options.numberofjobs + 1
+    if (filesperjob > 500):
+        print "\ntoo many files per job: " + str(filesperjob) + ".  Limiting to 500."
+        filesperjob=500
+        options.numberofjobs = totalfiles/500 + 1
+    
+    filesinlastjob = totalfiles - filesperjob *(options.numberofjobs - 1)
+    if ((filesinlastjob < 0) == 1):
+        options.numberofjobs = options.numberofjobs + filesinlastjob/filesperjob - 1
+        filesinlastjob = totalfiles - filesperjob*(options.numberofjobs - 1)
+    
+    tenG = 10000000000
+    tenM = 10000000
+    tenk = 10000
+    
+    totalfilesizeprint = totalfilesize
+    if (totalfilesizeprint > tenG):
+        totalfilesizeprint = totalfilesizeprint/(tenG/10)
+        totalfilesizeprint = str(totalfilesizeprint) + " G"
+    else:
+      if (totalfilesizeprint > tenM):
+          totalfilesizeprint = totalfilesizeprint/(tenM/10)
+          totalfilesizeprint = str(totalfilesizeprint) + " M"
+      else:
+        if (totalfilesizeprint > tenk):
+            totalfilesizeprint = totalfilesizeprint/(tenk/10)
+            totalfilesizeprint = str(totalfilesizeprint) + " k"
+    
+    avgfilesizeprint = avgfilesize
+    if (avgfilesizeprint > tenG):
+        avgfilesizeprint = avgfilesizeprint/(tenG/10)
+        avgfilesizeprint = str(avgfilesizeprint) + " G"
+    else:
+      if (avgfilesizeprint > tenM):
+          avgfilesizeprint = avgfilesizeprint/(tenM/10)
+          avgfilesizeprint = str(avgfilesizeprint) + " M"
+      else:
+        if (avgfilesizeprint > tenk):
+            avgfilesizeprint = avgfilesizeprint/(tenk/10)
+            avgfilesizeprint = str(avgfilesizeprint) + " k"
+    
+    print "\ntotalfiles:     ", totalfiles
+    print "totalfilesize:  ", totalfilesizeprint
+    print "avgfilesize:    ", avgfilesizeprint
+    print "numberofjobs:   ", options.numberofjobs
+    print "filesperjob:    ", filesperjob
+    print "filesinlastjob: ", filesinlastjob,"\n"
+    print "reducing " + str(totalfiles) +" files in " + str(options.numberofjobs) + " jobs (avg file size: "+ str(avgfilesize) +")."
+    
+    #*************************************************************************************
+    #source("/code/osgcode/ucsdt2/gLite-3.2.11-1/etc/profile.d/grid_env.sh")
+    #os.environ["LCG_GFAL_INFOSYS"] = "lcg-bdii.cern.ch:2170"
+    #os.environ["GLOBUS_TCP_PORT_RANGE"] = "20000,25000"
+    #
+
+    #file = open(tag+"/allfilenames.txt")
+    #file_names = file.readlines()
+    #file.close()
+    os.system("cp -r AnalysisScripts/* "+options.tag+"/.")
+    
+    outputfilename = options.rootseed + "_red_" + options.tag + "_typ" + str(options.itype)
+    numberofjobs = 0
+    
+    for f in xrange(0, len(file_names), filesperjob):
+        numberofjobs += 1
+        limits = (f, filesperjob+f)
+        if (limits[1] > len(file_names)):
+            limits = (f, len(file_names))
+     
+        datafilename = options.rootseed + "_datafiles"+ str(numberofjobs) + ".dat"
+        txtfilename = "sub"+ str(numberofjobs) + ".sh"
+        
+        out = open(options.tag+"/"+datafilename, "w")
+        out.write("output=/tmp/sani/" + outputfilename + "_job" + str(numberofjobs) +".root\n")
+        for i in file_names[limits[0]:limits[1]]:
+            if (options.eth):
+                out.write("Fil=root://cms01.lcg.cscs.ch//store" + i.split("/store")[1].split("\n")[0] + " typ=" + str(options.itype) + "\n")
+            elif (options.ucsd):
+                out.write("Fil=root://xrootd.t2.ucsd.edu//store" + i.split("/store")[1].split("\n")[0] + " typ=" + str(options.itype) + "\n")
+            else:
+                out.write("Fil=root://eoscms//eos/cms"+options.thedatadirectory+"/" + i.split("\n")[0] + " typ=" + str(options.itype) + "\n")
+            out.write("\n")
+
+        #out.write("electronVeto=0\n")
+        #out.write("runZeeValidation=1\n")
+        #out.write("cicVersion=7TeV\n")
+        #out.write("pfisoOffset=2.5\n")
+
+        if (len(options.inputBranchesFile.split(",")) > 1):
+            iB = options.inputBranchesFile.split(",")
+            for i in xrange(len(iB)):
+                out.write("inputBranches " + iB[i] + "\n")
+        else:
+            out.write("inputBranches " + options.inputBranchesFile + "\n")
+        out.write("outputBranches " + options.outputBranchesFile + "\n")
+        if (len(options.datfile.split(",")) > 1):
+            out.write("analyzer " + options.analysisname + " " + " ".join(options.datfile.split(",")) + " regressionVersion=5\n")
+        else:
+            out.write("analyzer " + options.analysisname + " " + options.datfile + " regressionVersion=5\n")        
+        out.close()
+
+        out2 = open(options.tag+"/"+txtfilename, "w")
+        if (options.eth or options.ucsd):
+            out2.write("#! /bin/bash\n")
+            out2.write("rsync -avP "+ os.getenv("HOSTNAME") + ":" + os.getenv("X509_USER_PROXY")+ " " +os.getenv("X509_USER_PROXY")+"\n")
+            out2.write("export X509_USER_PROXY="+ os.getenv("X509_USER_PROXY") +"\n")
+            out2.write("cd " + os.getcwd() + "/" + options.tag+ "\n")
+            out2.write("eval `scram runtime -sh`\n")
+            out2.write("mycrab\n")
+            out2.write("voms-proxy-info\n")
+            out2.write("python reduce.py -i " + datafilename + "\n")
+            outputfile = outputfilename + "_job" + str(numberofjobs) +".root"
+            out2.write("xrdcp -f /tmp/sani/" + outputfile + " root://eoscms//eos/cms/store/caf/user/sani/" + options.tag + "/"+outputfile+"\n")
+            out2.write("rm " + outputfile + "\n")
+            out2.write("rm "+os.getenv("X509_USER_PROXY"))
+            out2.close()
+            os.system("chmod 775 "+options.tag+"/"+txtfilename)
+        else:
+            out2.write("#! /bin/bash\n")
+            out2.write("cd " + os.getcwd() + "/" + options.tag+ "\n")
+            out2.write("eval `scram runtime -sh`\n")
+            out2.write("python reduce.py -i " + datafilename + "\n")
+            outputfile = outputfilename + "_job" + str(numberofjobs) +".root"
+            out2.write("xrdcp -f /tmp/sani/" + outputfile + " root://eoscms//eos/cms/store/caf/user/sani/" + options.tag + "/"+outputfile+"\n")
+            out2.write("rm " + outputfile + "\n")
+            out2.close()
+            os.system("chmod 775 "+options.tag+"/"+txtfilename)
+            
+        os.system("bsub -q cmscaf1nd -o $PWD/"+options.tag +"/" +txtfilename+".log $PWD/"+options.tag+"/"+txtfilename)
+
+    
