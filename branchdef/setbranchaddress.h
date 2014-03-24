@@ -1,3 +1,14 @@
+
+void SetBranchAddress_mc_n(TTree * tree) { tree->SetBranchAddress("mc_n", &mc_n, &b_mc_n); }; 
+void SetBranchAddress_mc_et(TTree * tree) { tree->SetBranchAddress("mc_et", &mc_et, &b_mc_et); }; 
+void SetBranchAddress_mc_eta(TTree * tree) { tree->SetBranchAddress("mc_eta", &mc_eta, &b_mc_eta); }; 
+void SetBranchAddress_mc_phi(TTree * tree) { tree->SetBranchAddress("mc_phi", &mc_phi, &b_mc_phi); }; 
+void SetBranchAddress_mu_glo_p4_corr(TTree * tree) { tree->SetBranchAddress("mu_glo_p4_corr", &mu_glo_p4_corr, &b_mu_glo_p4_corr); }; 
+void SetBranchAddress_el_std_p4_corr(TTree * tree) { tree->SetBranchAddress("el_std_p4_corr", &el_std_p4_corr, &b_el_std_p4_corr); }; 
+
+void SetBranchAddress_mu_glo_id_tight(TTree * tree) { tree->SetBranchAddress("mu_glo_id_tight", &mu_glo_id_tight, &b_mu_glo_id_tight); }; 
+void SetBranchAddress_mu_glo_id_loose(TTree * tree) { tree->SetBranchAddress("mu_glo_id_loose", &mu_glo_id_loose, &b_mu_glo_id_loose); }; 
+
 void SetBranchAddress_pho_ncrys(TTree * tree) { tree->SetBranchAddress("pho_ncrys", &pho_ncrys, &b_pho_ncrys); }; 
 void SetBranchAddress_pfcand_n(TTree * tree) { tree->SetBranchAddress("pfcand_n", &pfcand_n, &b_pfcand_n); }; 
 void SetBranchAddress_pfcand_pdgid(TTree * tree) { tree->SetBranchAddress("pfcand_pdgid", &pfcand_pdgid, &b_pfcand_pdgid); }

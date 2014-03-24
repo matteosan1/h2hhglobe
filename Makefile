@@ -46,7 +46,7 @@ MainFullDicts=
 ##
 ## Subdirectories
 ##
-SubPkgs=PhotonAnalysis VertexAnalysis VertexOptimization JetAnalysis PhotonJetAnalysis ZMuMuGammaAnalysis CategoryOptimizer FutureAnalysis
+SubPkgs=PhotonAnalysis VertexAnalysis VertexOptimization JetAnalysis PhotonJetAnalysis ZMuMuGammaAnalysis CategoryOptimizer FutureAnalysis SSLeptonAnalysis
 SubPkgsDict=VertexAnalysis/interface/VertexAlgoParameters.h 
 SubPkgsFullDicts=CategoryOptimizer/interface/*.$(HeadSuf)
 

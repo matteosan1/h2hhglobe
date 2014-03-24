@@ -1,3 +1,11 @@
+TBranch* b_mu_glo_id_tight;
+TBranch* b_mu_glo_id_loose;
+TBranch* b_mc_n;
+TBranch* b_mc_et;
+TBranch* b_mc_eta;
+TBranch* b_mc_phi;
+TBranch* b_mu_glo_p4_corr;
+TBranch* b_el_std_p4_corr;
 TBranch* b_pho_ncrys;
 TBranch* b_pho_bieta;
 TBranch* b_pho_biphi;

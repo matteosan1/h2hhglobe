@@ -44,7 +44,7 @@ if __name__ == "__main__":
     temp1 = pipe("scram tool info root", temp)
     temp2 = pipe("grep Version", temp1)
     rootVersion = pipe("awk '{print $3}'", temp2).split("\n")[0]
-    CMSSWVersion  = re.search("(CMSSW.+)/s", top).group(1)
+    CMSSWVersion  = "CMSSW_6_1_2"#re.search("(CMSSW.+)/s", top).group(1)
     username      = os.getlogin()
     hadoop_prefix = "srm://bsrm-1.t2.ucsd.edu:8443/srm/v2/server?SFN="
     hadoop_home   = "/hadoop/cms/store/user/" + username

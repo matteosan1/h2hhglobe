@@ -1,3 +1,5 @@
+mu_glo_p4_corr = new TClonesArray("TLorentzVector", MAX_MUONS);
+el_std_p4_corr = new TClonesArray("TLorentzVector", MAX_ELECTRONS);
 pfcand_p4 = new TClonesArray("TLorentzVector", MAX_PFCANDS);
 pfcand_posvtx = new TClonesArray("TVector3", MAX_PFCANDS);
 

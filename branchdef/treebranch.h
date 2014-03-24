@@ -1,3 +1,13 @@
+void Branch_mu_glo_id_tight(TTree * tree) { tree->Branch("mu_glo_id_tight", &mu_glo_id_tight, "mu_glo_id_tight[mu_glo_n]/I");  }; 
+void Branch_mu_glo_id_loose(TTree * tree) { tree->Branch("mu_glo_id_loose", &mu_glo_id_loose, "mu_glo_id_loose[mu_glo_n]/I");  }; 
+
+void Branch_mc_n(TTree * tree) { tree->Branch("mc_n",&mc_n, "mc_n/I");  }; 
+void Branch_mc_et(TTree * tree) { tree->Branch("mc_et",&mc_et, "mc_et[mc_n]/F");  }; 
+void Branch_mc_eta(TTree * tree) { tree->Branch("mc_eta",&mc_eta, "mc_eta[mc_n]/F");  }; 
+void Branch_mc_phi(TTree * tree) { tree->Branch("mc_phi",&mc_phi, "mc_phi[mc_n]/F");  }; 
+void Branch_mu_glo_p4_corr(TTree * tree) { tree->Branch("mu_glo_p4_corr", "TClonesArray", &mu_glo_p4_corr, 32000, 0); }; 
+void Branch_el_std_p4_corr(TTree * tree) { tree->Branch("el_std_p4_corr", "TClonesArray", &el_std_p4_corr, 32000, 0); }; 
+
 void Branch_pho_ncrys(TTree * tree) { tree->Branch("pho_ncrys",&pho_ncrys, "pho_ncrys[pho_n]/I");  }; 
 
 void Branch_pfcand_n(TTree * tree) { tree->Branch("pfcand_n",&pfcand_n, "pfcand_n/I");  }; 

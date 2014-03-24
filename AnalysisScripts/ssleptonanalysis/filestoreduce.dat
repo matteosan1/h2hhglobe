@@ -1,0 +1,8 @@
+output=my_reduced_tuple_foo.root
+#Dir=/home/users/aholz/hadoop/2013-09-double-higgs/00-crab-globe/DY typ=1
+Fil=/home/users/aholz/hadoop/2013-09-double-higgs/00-crab-globe/DY/presel_0419.root typ=1
+
+inputBranches ssleptonanalysis/reduction_input.dat
+outputBranches ssleptonanalysis/reduction_output.dat
+
+analyzer SSLeptonAnalysis ssleptonanalysis/ssleptonanalysis.dat

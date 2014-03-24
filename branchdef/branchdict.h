@@ -1,3 +1,11 @@
+BRANCH_DICT(mu_glo_id_tight);
+BRANCH_DICT(mu_glo_id_loose);
+BRANCH_DICT(mc_n);
+BRANCH_DICT(mc_et);
+BRANCH_DICT(mc_eta);
+BRANCH_DICT(mc_phi);
+BRANCH_DICT(mu_glo_p4_corr);
+BRANCH_DICT(el_std_p4_corr);
 BRANCH_DICT(pho_ncrys);
 BRANCH_DICT(pfcand_n);
 BRANCH_DICT(pfcand_pdgid);
@@ -850,3 +858,4 @@ BRANCH_DICT(jet_algoPF3_cgenMatched);
 BRANCH_DICT(jet_algoPF1_lgenMatched);
 BRANCH_DICT(jet_algoPF2_lgenMatched);
 BRANCH_DICT(jet_algoPF3_lgenMatched);
+BRANCH_DICT(mc_n);

@@ -1,3 +1,11 @@
+Int_t mu_glo_id_tight[MAX_MUONS];
+Int_t mu_glo_id_loose[MAX_MUONS];
+Int_t mc_n;
+Float_t mc_et[10];
+Float_t mc_eta[10];
+Float_t mc_phi[10];
+TClonesArray* mu_glo_p4_corr;
+TClonesArray* el_std_p4_corr;
 Int_t pho_ncrys[MAX_PHOTONS];
 Int_t pfcand_n;
 Int_t pfcand_pdgid[MAX_PFCANDS];
