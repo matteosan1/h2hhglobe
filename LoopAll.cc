@@ -1229,7 +1229,7 @@ void LoopAll::GetEntry(std::set<TBranch *> & branches, int jentry)
   }
 }
 // ------------------------------------------------------------------------------------
-void LoopAll::BookTreeBranch(std::string name, int type, std::string dirName){
+void LoopAll::BookTreeBranch(std::string name, int type, std::string limit,std::string dirName){
   for(unsigned int ind=0; ind<treeContainer[dirName].size(); ind++) {
     treeContainer[dirName][ind].AddTreeBranch(name,type);
   }
@@ -1407,6 +1407,32 @@ void LoopAll::FillTreeContainer(std::string dir){	// To Be Called after each jen
   for (std::map<std::string, std::vector<TreeContainer> >::iterator ii = treeContainer.begin(); ii!=treeContainer.end(); ++ii) {
     (((*ii).second)[current_sample_index]).FillTree();
   }
+}
+
+// ------------------------------------------------------------------------------------
+void LoopAll::FillTree(std::string name, int* x, int size, std::string dirName) {
+  if (size > 100) {
+    size = 100;
+    std::cerr << "WARNING: cannot have array bigger than 100 elements (" << name << ")." << std::endl;
+  }
+
+  if (treeContainer.find(dirName) != treeContainer.end())
+    treeContainer[dirName][current_sample_index].FillIntArray(name, x, size);
+  else
+    std::cout << "Tree type " << dirName << " not defined" << std::endl;
+}
+
+// ------------------------------------------------------------------------------------
+void LoopAll::FillTree(std::string name, float* x, int size, std::string dirName) {
+  if (size > 100) {
+    size = 100;
+    std::cerr << "WARNING: cannot have array bigger than 100 elements (" << name << ")." << std::endl;
+  }
+
+  if (treeContainer.find(dirName) != treeContainer.end())
+    treeContainer[dirName][current_sample_index].FillFloatArray(name, x, size);
+  else
+    std::cout << "Tree type " << dirName << " not defined" << std::endl;
 }
 // ------------------------------------------------------------------------------------
 void LoopAll::FillTree(std::string name, float x, std::string dirName){

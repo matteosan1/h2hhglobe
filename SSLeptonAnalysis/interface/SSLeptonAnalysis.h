@@ -32,12 +32,13 @@ class SSLeptonAnalysis : public StatAnalysis {
   virtual bool Analysis(LoopAll&, Int_t);
   
   bool checkEventHLT(LoopAll& l, std::vector<std::string> paths);
-  void Tree(LoopAll& l, Int_t lept1, Int_t lept2, const TLorentzVector & Higgs, Int_t cat, Int_t vbfcat, Float_t weight, Float_t pu_weight, bool isSyst, std::string name1, bool* jetid_flags);
+  void Tree(LoopAll& l, Int_t pairs, Int_t* type, Float_t* mass, Int_t* cat, Float_t weight, Float_t pu_weight);
   void FillRooContainer(LoopAll& l, int cur_type, float mass, int category, float weight);
   void FillSignalLabelMap(LoopAll & l);
   void buildBkgModel(LoopAll& l, const std::string & postfix);
   std::string GetSignalLabel(int id);
-  
+  int categories(TLorentzVector* p1, TLorentzVector* p2, bool mixed = false);
+
   int nCategories_;
   float massMin,massMax;
   int nDataBins;
@@ -46,7 +47,8 @@ class SSLeptonAnalysis : public StatAnalysis {
   std::string muFitParametersFile;
   bool doBlinding;
   bool dataIs2011;
-  
+  float eleIDCut;
+  bool muIDTight;
   std::string jetHandlerCfg;
   //JetHandler* jethandler_;
   

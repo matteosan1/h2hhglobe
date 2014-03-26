@@ -216,7 +216,7 @@ class LoopAll {
   
   // Cut down (flat) trees for MVA Training 
   void InitTrees(std::string);
-  void BookTreeBranch(std::string name, int type, std::string dirName="");
+  void BookTreeBranch(std::string name, int type, std::string limit="", std::string dirName = "");
   template <class T> void BookExternalTreeBranch(const char * name, T* addr, std::string dirName) {
 	  for(unsigned int ind=0; ind<treeContainer[dirName].size(); ind++) {
 		  treeContainer[dirName][ind].AddExternalBranch<T>(name,addr);
@@ -238,6 +238,8 @@ class LoopAll {
 
   void FillTreeContainer(std::string dir="");
 
+  void FillTree(std::string name, int* x, int size, std::string dirName="");
+  void FillTree(std::string name, float* x, int size, std::string dirName="");
   void FillTree(std::string name, float x, std::string dirName="");
   void FillTree(std::string name, double x, std::string dirName="");
   void FillTree(std::string name, int x, std::string dirName="");

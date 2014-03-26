@@ -29,24 +29,14 @@ if len(args) != 1:
 options.inDir = args[0]
 options.inDirName = p.basename(options.inDir)
 options.inDirBase = p.dirname(options.inDir)
-options.eosLs = "/afs/cern.ch/project/eos/installation/pro/bin/eos root://eoscms ls /eos/cms"
+options.eosLs = "ls " #"/afs/cern.ch/project/eos/installation/pro/bin/eos root://eoscms ls /eos/cms"
 
 if not options.inDirName:
     raise RuntimeError("Empty target directory name (which defines the sample name). Check path.")
 
-try:
-    ld_path = os.getenv("LD_LIBRARY_PATH")
-except:
-    ld_path = ""
-if not "/afs/cern.ch/project/eos/installation/pro/lib64/" in ld_path:
-    os.putenv("LD_LIBRARY_PATH", "%s:%s" % ( ld_path, "/afs/cern.ch/project/eos/installation/pro/lib64/" ) )
-    
-if options.putHadoop:
-    call( """ls %(inDir)s | awk '/root$/ { print \"%(inDir)s/\"$1  }' | sed 's/\?.*$//' > %(inDirName)s.files.txt"""
+call( """ls %(inDir)s | awk '/root$/ { print \"%(inDir)s/\"$1  }' | sed 's/\?.*$//' > %(inDirName)s.files.txt"""
       % vars(options), shell=True)
-else: 
-    call( """%(eosLs)s%(inDir)s | awk '/root$/ { print \"root://eoscms//eos/cms%(inDir)s/\"$1  }' | sed 's/\?.*$//' > %(inDirName)s.files.txt"""
-      % vars(options), shell=True)
+
 call( """rm -f %(inDirName)s.pileup.root %(inDirName)s.pileup.root.log""" % vars(options), shell=True)
 
 file = open("%(inDirName)s.files.txt"%vars(options))
@@ -54,44 +44,6 @@ lines = file.readlines()
 file.close()
 
 black_list = [
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_0.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_2.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_23.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_24.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_25.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_27.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_28.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_29.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_3.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_30.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_33.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_47.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_48.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_50.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_51.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_52.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_54.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_55.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_56.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_57.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_58.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_59.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_60.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_61.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_62.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_64.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_65.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_66.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_67.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_68.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_69.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_70.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_71.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_72.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_73.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_75.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_76.root",
-			"root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/reduced/reduction_RDMC_June2013_v2/mc/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1/DiPhotonJetsBox_M60_8TeV-sherpa_Summer12_DR53X-PU_RD1_START53_V7N-v1_78.root"
 ]
 
 for i,l in enumerate(lines):
@@ -116,13 +68,6 @@ h2.Write()
 h1.Write()
 out.Close()
 
-if options.putHadoop:
-    cmd = """cp %(inDirName)s.pileup.root %(inDirBase)s/%(inDirName)s.pileup.root"""
-    print "Copying back root"
-    call(cmd % vars(options), shell=True)
-    
-if options.putBack:
-    cmd = """cmsStage -f %(inDirName)s.pileup.root %(inDirBase)s/%(inDirName)s.pileup.root"""
-    print "Copying back root"
-    call(cmd % vars(options), shell=True)
-
+cmd = """cp %(inDirName)s.pileup.root %(inDirBase)s/%(inDirName)s.pileup.root"""
+print "Copying back root"
+call(cmd % vars(options), shell=True)

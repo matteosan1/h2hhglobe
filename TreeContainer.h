@@ -13,6 +13,8 @@ class TreeContainer {
   TreeContainer(int,std::string, std::string);
   ~TreeContainer();
 
+  void FillIntArray(std::string, int*, int size);
+  void FillFloatArray(std::string, float*, int size);
   void FillFloat(std::string,  float);
   void FillDouble(std::string, double);
   void FillUInt(std::string,  unsigned int);
@@ -20,7 +22,7 @@ class TreeContainer {
   void FillString(std::string, std::string);
   void FillBool(std::string, bool);
 
-  void AddTreeBranch(std::string, int);
+  void AddTreeBranch(std::string, int, std::string size="");
   template<class T> void AddExternalBranch(const char * name, T* addr) { tr_->Branch(name,addr); };
   template <class T> void AddExternalBranch(const char * name, T* addr, const char*  type) { tr_->Branch(name,addr,type); };
   template <class T> void AddExternalBranch(const char * name, T* addr, int bufsize, int splitlevel) { tr_->Branch(name,addr,bufsize,splitlevel); };
@@ -42,12 +44,14 @@ class TreeContainer {
   std::string dirName;
    
   TTree *tr_;
-  std::map<std::string, double>         double_branches;
-  std::map<std::string, float>          float_branches;
-  std::map<std::string, int>            int_branches;
-  std::map<std::string, unsigned int>   uint_branches;
-  std::map<std::string, std::string>    string_branches;
-  std::map<std::string, bool>           bool_branches;
+  std::map<std::string, double>              double_branches;
+  std::map<std::string, std::vector<int> >   float_int_branches;
+  std::map<std::string, std::vector<float> > float_array_branches;
+  std::map<std::string, float>               float_branches;
+  std::map<std::string, int>                 int_branches;
+  std::map<std::string, unsigned int>        uint_branches;
+  std::map<std::string, std::string>         string_branches;
+  std::map<std::string, bool>                bool_branches;
 
   void resetDefaults();
 

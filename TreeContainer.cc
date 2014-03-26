@@ -35,7 +35,7 @@ int TreeContainer::getTreeVal() {
 }
 
 
-void TreeContainer::AddTreeBranch(std::string name,int type){
+void TreeContainer::AddTreeBranch(std::string name,int type, std::string size) {
 
   if (type==0){	// Int_t
     int_branches.insert(std::pair<std::string,int> (name,-999) );	
@@ -67,14 +67,42 @@ void TreeContainer::AddTreeBranch(std::string name,int type){
     bool_branches.insert(std::pair<std::string,bool> (name,false) );
     tr_->Branch(name.c_str(),&(bool_branches[name]),Form("%s/Bool_t",name.c_str()));
     if (TCDEBUG) std::cout << "TreeContainer -- Creating Bool Branch " << name << std::endl;
-    
+  }  
+  else if (type==10){      // array of ints
+    float_int_branches.insert(std::pair<std::string, std::vector<int>>(name, std::vector<int>(10, 0)));
+    tr_->Branch(name.c_str(), &float_int_branches[name][0], Form("%s[%s]/Int_t",name.c_str(), size.c_str()));
+    if (TCDEBUG) 
+      std::cout << "TreeContainer -- Creating Array of Float Branch " << name << std::endl;
+  } 
+  else if (type==12){      // array of floats
+    float_array_branches.insert(std::pair<std::string, std::vector<float>>(name, std::vector<float>(10, 0)));
+    tr_->Branch(name.c_str(), &float_array_branches[name][0], Form("%s[%s]/Float_t",name.c_str(), size.c_str()));
+    if (TCDEBUG) 
+      std::cout << "TreeContainer -- Creating Array of Float Branch " << name << std::endl;
   } else { 
     std::cerr << "TreeContainer -- No Type " << type << std::endl;
   }
 }
 
-void TreeContainer::FillFloat(std::string name, float x){
+void TreeContainer::FillIntArray(std::string name, int* x, int size){
+  
+  std::map<std::string, std::vector<int> >::iterator it = float_int_branches.find(name);
+  if (it!=float_int_branches.end()){
+    (*it).second.clear();
+    (*it).second.insert((*it).second.begin(), x, x+size);
+  } 
+}
 
+void TreeContainer::FillFloatArray(std::string name, float* x, int size){
+  
+  std::map<std::string, std::vector<float> >::iterator it = float_array_branches.find(name);
+  if (it!=float_array_branches.end()){
+    (*it).second.clear();
+    (*it).second.insert((*it).second.begin(), x, x+size);
+  } 
+}
+
+void TreeContainer::FillFloat(std::string name, float x){
   std::map<std::string,float>::iterator it = float_branches.find(name);
   if (it!=float_branches.end()){
     (*it).second = x;

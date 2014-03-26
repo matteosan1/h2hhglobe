@@ -232,8 +232,8 @@ class configProducer:
     for tv in self.treevariables_:
       dirname = self.read_dat_treevariables(tv)
       self.ut_.InitTrees(dirname)
-      for dum in self.plotvar_.vardef:
-        self.ut_.BookTreeBranch(dum['name'],dum['type'], dirname)
+      for dum in self.plotvar_.vardef:  
+        self.ut_.BookTreeBranch(dum['name'],dum['type'],dum['size'],dirname)
       
   def init_reduce(self):
     self.read_config_reduce(self.conf_filename)
@@ -365,7 +365,7 @@ class configProducer:
      dirname = ""
      self.plotvar_.clear()
      self.read_file(f)
-     map_dict = { "type":int, "name": str}
+     map_dict = { "type":int, "name": str, "size":str}
      map_c   = {}
      for line in self.lines_:       
          if len(line) < 2: continue
@@ -382,7 +382,8 @@ class configProducer:
                      map_c[name] = map_dict[name](val)
                  else:
                      sys.exit("Unrecognised Argument:\n ' %s ' in line:\n ' %s '" %(name,line))
-
+             if ("size" not in map_c.keys()):
+                 map_c['size'] = ""
              self.plotvar_.vardef.append(map_c.copy())
          else: sys.exit("Config Line Unrecognised:\n ' %s '"%line)
      return dirname
@@ -400,7 +401,6 @@ class configProducer:
       if "cutname" in line:
         # We have one of the file def lines
         split_line = line.split()
-
         val_arr    = []
         minval_arr = []
         maxval_arr = []

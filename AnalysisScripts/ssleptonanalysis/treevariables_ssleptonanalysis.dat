@@ -1,0 +1,19 @@
+->
+Declare Branches for flat tree which will be saved in output
+delare:
+	type=0,1,2,3 (int,unsigned int,float,double)
+	name=name 
+->
+type=0 name=run
+type=3 name=event
+type=0 name=lumis
+type=0 name=itype
+type=2 name=weight
+type=2 name=pu_weight
+type=0 name=nvtx
+type=2 name=rho
+type=0 name=pairs
+type=12 name=mass size=pairs
+type=10 name=cat  size=pairs  
+type=10 name=type size=pairs
+
