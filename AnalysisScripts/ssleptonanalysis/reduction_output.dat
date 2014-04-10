@@ -43,6 +43,7 @@ el_std_pfiso_photon
 el_std_charge 
 el_std_mva_trig
 el_std_mva_nontrig
+#el_std_conv
 
 mu_glo_n
 mu_glo_p4
@@ -54,6 +55,10 @@ met_phi_pfmet
 vtx_std_n
 vtx_std_xyz
 
-
-
+jet_algoPF1_n
+jet_algoPF1_p4
+jet_algoPF1_cutbased_wp_level_ext
+jet_algoPF1_csvBtag
+jet_algoPF1_csvMvaBtag
+jet_algoPF1_jetProbBtag
 

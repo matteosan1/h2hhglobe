@@ -1223,6 +1223,8 @@ void SetBranchAddress_pho_passcuts_sublead(TTree * tree) { tree->SetBranchAddres
 void doJetMatching(TClonesArray & reco, TClonesArray & gen, Bool_t * match_flag, Bool_t * match_vbf_flag, Bool_t * match_b_flag, Bool_t * match_c_flag,
 		   Bool_t * match_l_flag, Float_t * match_pt, Float_t * match_dr, Float_t maxDr=0.4 );		 
 
+std::vector<int> SelectNHighestPtJets(TClonesArray* p41s, TClonesArray* p42s, Bool_t * jetid_flags,
+				      float ptMin, float etaMax, float dr2pho);
 std::pair<int, int> Select2HighestPtJets(TLorentzVector& leadpho, TLorentzVector& subleadpho, Bool_t * jetid_flags=0);
 int RescaleJetEnergy(bool force=false);
 

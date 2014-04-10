@@ -30,7 +30,8 @@ class SSLeptonAnalysis : public StatAnalysis {
   virtual bool SkimEvents(LoopAll&, int);
   virtual bool SelectEvents(LoopAll&, int);
   virtual bool Analysis(LoopAll&, Int_t);
-  
+
+  bool ElectronMVACuts(LoopAll& l, int i);
   bool checkEventHLT(LoopAll& l, std::vector<std::string> paths);
   void Tree(LoopAll& l, Int_t pairs, Int_t* type, Float_t* mass, Int_t* cat, Float_t weight, Float_t pu_weight);
   void FillRooContainer(LoopAll& l, int cur_type, float mass, int category, float weight);
@@ -39,7 +40,11 @@ class SSLeptonAnalysis : public StatAnalysis {
   std::string GetSignalLabel(int id);
   int categories(TLorentzVector* p1, TLorentzVector* p2, bool mixed = false);
 
+  void MetCorrections2012(LoopAll& l);
+  void MetCorrections2012_Simple(LoopAll& l,TLorentzVector lead_p4 ,TLorentzVector sublead_p4);
+
   int nCategories_;
+  float minMassCut;
   float massMin,massMax;
   int nDataBins;
   std::vector<int> bkgPolOrderByCat;

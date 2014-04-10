@@ -76,7 +76,7 @@ void SSLeptonAnalysis::Init(LoopAll& l) {
     l.rooContainer->BlindData(doBlinding);
     l.rooContainer->AddGlobalSystematic("lumi",1.044,1.00);
     l.rooContainer->SetNCategories(nCategories_);
-    l.rooContainer->AddObservable("CMS_hll_mass" ,massMin,massMax);
+    l.rooContainer->AddObservable("CMS_hh_mass" ,massMin,massMax);
     l.rooContainer->AddConstant("IntLumi",l.intlumi_);
     
     //// SM Model
@@ -85,15 +85,14 @@ void SSLeptonAnalysis::Init(LoopAll& l) {
     //l.rooContainer->AddConstant("XSBR_wzh_125",0.002035123);
     //l.rooContainer->AddConstant("XSBR_tth_125",0.000197718);
     
-    l.rooContainer->CreateDataSet("CMS_hll_mass","data_mass"    ,nDataBins);
-    l.rooContainer->CreateDataSet("CMS_hll_mass","bkg_mass"     ,nDataBins);
+    l.rooContainer->CreateDataSet("CMS_hh_mass","data_mass"    ,nDataBins);
+    l.rooContainer->CreateDataSet("CMS_hh_mass","bkg_mass"     ,nDataBins);
     
-    for(size_t isig=0; isig<sigPointsToBook.size(); ++isig) {
-      int sig = sigPointsToBook[isig];
-      l.rooContainer->CreateDataSet("CMS_hll_mass",Form("sig_ggh_mass_m%d",sig),nDataBins);
-      l.rooContainer->CreateDataSet("CMS_hll_mass",Form("sig_vbf_mass_m%d",sig),nDataBins);
-      l.rooContainer->CreateDataSet("CMS_hll_mass",Form("sig_rsg_mass_m%d",sig),nDataBins);
-    }
+    //for(size_t isig=0; isig<sigPointsToBook.size(); ++isig) {
+    //  int sig = sigPointsToBook[isig];
+    //l.rooContainer->CreateDataSet("CMS_hh_mass",Form("sig_ggh_mass_m%d",sig),nDataBins);
+    l.rooContainer->CreateDataSet("CMS_hh_mass", "sig_lambdaXX" ,nDataBins);
+    //}
     
     std::string postfix=(dataIs2011?"":"_8TeV");
     // build the model
@@ -135,64 +134,64 @@ void SSLeptonAnalysis::buildBkgModel(LoopAll& l, const std::string& postfix) {
   }
   
   
-  l.rooContainer->AddRealVar("CMS_hll_pol6_0"+postfix,-0.1,-1.0,1.0);
-  l.rooContainer->AddRealVar("CMS_hll_pol6_1"+postfix,-0.1,-1.0,1.0);
-  l.rooContainer->AddRealVar("CMS_hll_pol6_2"+postfix,-0.1,-1.0,1.0);
-  l.rooContainer->AddRealVar("CMS_hll_pol6_3"+postfix,-0.01,-1.0,1.0);
-  l.rooContainer->AddRealVar("CMS_hll_pol6_4"+postfix,-0.01,-1.0,1.0);
-  l.rooContainer->AddRealVar("CMS_hll_pol6_5"+postfix,-0.01,-1.0,1.0);
-  l.rooContainer->AddFormulaVar("CMS_hll_modpol6_0"+postfix,"@0*@0","CMS_hll_pol6_0"+postfix);
-  l.rooContainer->AddFormulaVar("CMS_hll_modpol6_1"+postfix,"@0*@0","CMS_hll_pol6_1"+postfix);
-  l.rooContainer->AddFormulaVar("CMS_hll_modpol6_2"+postfix,"@0*@0","CMS_hll_pol6_2"+postfix);
-  l.rooContainer->AddFormulaVar("CMS_hll_modpol6_3"+postfix,"@0*@0","CMS_hll_pol6_3"+postfix);
-  l.rooContainer->AddFormulaVar("CMS_hll_modpol6_4"+postfix,"@0*@0","CMS_hll_pol6_4"+postfix);
-  l.rooContainer->AddFormulaVar("CMS_hll_modpol6_5"+postfix,"@0*@0","CMS_hll_pol6_4"+postfix);
-  l.rooContainer->AddRealVar("CMS_hll_pol5_0"+postfix,-0.1,-1.0,1.0);
-  l.rooContainer->AddRealVar("CMS_hll_pol5_1"+postfix,-0.1,-1.0,1.0);
-  l.rooContainer->AddRealVar("CMS_hll_pol5_2"+postfix,-0.1,-1.0,1.0);
-  l.rooContainer->AddRealVar("CMS_hll_pol5_3"+postfix,-0.01,-1.0,1.0);
-  l.rooContainer->AddRealVar("CMS_hll_pol5_4"+postfix,-0.01,-1.0,1.0);
-  l.rooContainer->AddFormulaVar("CMS_hll_modpol5_0"+postfix,"@0*@0","CMS_hll_pol5_0"+postfix);
-  l.rooContainer->AddFormulaVar("CMS_hll_modpol5_1"+postfix,"@0*@0","CMS_hll_pol5_1"+postfix);
-  l.rooContainer->AddFormulaVar("CMS_hll_modpol5_2"+postfix,"@0*@0","CMS_hll_pol5_2"+postfix);
-  l.rooContainer->AddFormulaVar("CMS_hll_modpol5_3"+postfix,"@0*@0","CMS_hll_pol5_3"+postfix);
-  l.rooContainer->AddFormulaVar("CMS_hll_modpol5_4"+postfix,"@0*@0","CMS_hll_pol5_4"+postfix);
+  l.rooContainer->AddRealVar("CMS_hh_pol6_0"+postfix,-0.1,-1.0,1.0);
+  l.rooContainer->AddRealVar("CMS_hh_pol6_1"+postfix,-0.1,-1.0,1.0);
+  l.rooContainer->AddRealVar("CMS_hh_pol6_2"+postfix,-0.1,-1.0,1.0);
+  l.rooContainer->AddRealVar("CMS_hh_pol6_3"+postfix,-0.01,-1.0,1.0);
+  l.rooContainer->AddRealVar("CMS_hh_pol6_4"+postfix,-0.01,-1.0,1.0);
+  l.rooContainer->AddRealVar("CMS_hh_pol6_5"+postfix,-0.01,-1.0,1.0);
+  l.rooContainer->AddFormulaVar("CMS_hh_modpol6_0"+postfix,"@0*@0","CMS_hh_pol6_0"+postfix);
+  l.rooContainer->AddFormulaVar("CMS_hh_modpol6_1"+postfix,"@0*@0","CMS_hh_pol6_1"+postfix);
+  l.rooContainer->AddFormulaVar("CMS_hh_modpol6_2"+postfix,"@0*@0","CMS_hh_pol6_2"+postfix);
+  l.rooContainer->AddFormulaVar("CMS_hh_modpol6_3"+postfix,"@0*@0","CMS_hh_pol6_3"+postfix);
+  l.rooContainer->AddFormulaVar("CMS_hh_modpol6_4"+postfix,"@0*@0","CMS_hh_pol6_4"+postfix);
+  l.rooContainer->AddFormulaVar("CMS_hh_modpol6_5"+postfix,"@0*@0","CMS_hh_pol6_4"+postfix);
+  l.rooContainer->AddRealVar("CMS_hh_pol5_0"+postfix,-0.1,-1.0,1.0);
+  l.rooContainer->AddRealVar("CMS_hh_pol5_1"+postfix,-0.1,-1.0,1.0);
+  l.rooContainer->AddRealVar("CMS_hh_pol5_2"+postfix,-0.1,-1.0,1.0);
+  l.rooContainer->AddRealVar("CMS_hh_pol5_3"+postfix,-0.01,-1.0,1.0);
+  l.rooContainer->AddRealVar("CMS_hh_pol5_4"+postfix,-0.01,-1.0,1.0);
+  l.rooContainer->AddFormulaVar("CMS_hh_modpol5_0"+postfix,"@0*@0","CMS_hh_pol5_0"+postfix);
+  l.rooContainer->AddFormulaVar("CMS_hh_modpol5_1"+postfix,"@0*@0","CMS_hh_pol5_1"+postfix);
+  l.rooContainer->AddFormulaVar("CMS_hh_modpol5_2"+postfix,"@0*@0","CMS_hh_pol5_2"+postfix);
+  l.rooContainer->AddFormulaVar("CMS_hh_modpol5_3"+postfix,"@0*@0","CMS_hh_pol5_3"+postfix);
+  l.rooContainer->AddFormulaVar("CMS_hh_modpol5_4"+postfix,"@0*@0","CMS_hh_pol5_4"+postfix);
 
-  l.rooContainer->AddRealVar("CMS_hll_quartic0"+postfix,-0.1,-1.0,1.0);
-  l.rooContainer->AddRealVar("CMS_hll_quartic1"+postfix,-0.1,-1.0,1.0);
-  l.rooContainer->AddRealVar("CMS_hll_quartic2"+postfix,-0.1,-1.0,1.0);
-  l.rooContainer->AddRealVar("CMS_hll_quartic3"+postfix,-0.01,-1.0,1.0);
-  l.rooContainer->AddFormulaVar("CMS_hll_modquartic0"+postfix,"@0*@0","CMS_hll_quartic0"+postfix);
-  l.rooContainer->AddFormulaVar("CMS_hll_modquartic1"+postfix,"@0*@0","CMS_hll_quartic1"+postfix);
-  l.rooContainer->AddFormulaVar("CMS_hll_modquartic2"+postfix,"@0*@0","CMS_hll_quartic2"+postfix);
-  l.rooContainer->AddFormulaVar("CMS_hll_modquartic3"+postfix,"@0*@0","CMS_hll_quartic3"+postfix);
+  l.rooContainer->AddRealVar("CMS_hh_quartic0"+postfix,-0.1,-1.0,1.0);
+  l.rooContainer->AddRealVar("CMS_hh_quartic1"+postfix,-0.1,-1.0,1.0);
+  l.rooContainer->AddRealVar("CMS_hh_quartic2"+postfix,-0.1,-1.0,1.0);
+  l.rooContainer->AddRealVar("CMS_hh_quartic3"+postfix,-0.01,-1.0,1.0);
+  l.rooContainer->AddFormulaVar("CMS_hh_modquartic0"+postfix,"@0*@0","CMS_hh_quartic0"+postfix);
+  l.rooContainer->AddFormulaVar("CMS_hh_modquartic1"+postfix,"@0*@0","CMS_hh_quartic1"+postfix);
+  l.rooContainer->AddFormulaVar("CMS_hh_modquartic2"+postfix,"@0*@0","CMS_hh_quartic2"+postfix);
+  l.rooContainer->AddFormulaVar("CMS_hh_modquartic3"+postfix,"@0*@0","CMS_hh_quartic3"+postfix);
 
-  l.rooContainer->AddRealVar("CMS_hll_quad0"+postfix,-0.1,-1.5,1.5);
-  l.rooContainer->AddRealVar("CMS_hll_quad1"+postfix,-0.01,-1.5,1.5);
-  l.rooContainer->AddFormulaVar("CMS_hll_modquad0"+postfix,"@0*@0","CMS_hll_quad0"+postfix);
-  l.rooContainer->AddFormulaVar("CMS_hll_modquad1"+postfix,"@0*@0","CMS_hll_quad1"+postfix);
+  l.rooContainer->AddRealVar("CMS_hh_quad0"+postfix,-0.1,-1.5,1.5);
+  l.rooContainer->AddRealVar("CMS_hh_quad1"+postfix,-0.01,-1.5,1.5);
+  l.rooContainer->AddFormulaVar("CMS_hh_modquad0"+postfix,"@0*@0","CMS_hh_quad0"+postfix);
+  l.rooContainer->AddFormulaVar("CMS_hh_modquad1"+postfix,"@0*@0","CMS_hh_quad1"+postfix);
 
-  l.rooContainer->AddRealVar("CMS_hll_cubic0"+postfix,-0.1,-1.5,1.5);
-  l.rooContainer->AddRealVar("CMS_hll_cubic1"+postfix,-0.1,-1.5,1.5);
-  l.rooContainer->AddRealVar("CMS_hll_cubic2"+postfix,-0.01,-1.5,1.5);
-  l.rooContainer->AddFormulaVar("CMS_hll_modcubic0"+postfix,"@0*@0","CMS_hll_cubic0"+postfix);
-  l.rooContainer->AddFormulaVar("CMS_hll_modcubic1"+postfix,"@0*@0","CMS_hll_cubic1"+postfix);
-  l.rooContainer->AddFormulaVar("CMS_hll_modcubic2"+postfix,"@0*@0","CMS_hll_cubic2"+postfix);
+  l.rooContainer->AddRealVar("CMS_hh_cubic0"+postfix,-0.1,-1.5,1.5);
+  l.rooContainer->AddRealVar("CMS_hh_cubic1"+postfix,-0.1,-1.5,1.5);
+  l.rooContainer->AddRealVar("CMS_hh_cubic2"+postfix,-0.01,-1.5,1.5);
+  l.rooContainer->AddFormulaVar("CMS_hh_modcubic0"+postfix,"@0*@0","CMS_hh_cubic0"+postfix);
+  l.rooContainer->AddFormulaVar("CMS_hh_modcubic1"+postfix,"@0*@0","CMS_hh_cubic1"+postfix);
+  l.rooContainer->AddFormulaVar("CMS_hh_modcubic2"+postfix,"@0*@0","CMS_hh_cubic2"+postfix);
 
-  l.rooContainer->AddRealVar("CMS_hll_lin0"+postfix,-0.01,-1.5,1.5);
-  l.rooContainer->AddFormulaVar("CMS_hll_modlin0"+postfix,"@0*@0","CMS_hll_lin0"+postfix);
+  l.rooContainer->AddRealVar("CMS_hh_lin0"+postfix,-0.01,-1.5,1.5);
+  l.rooContainer->AddFormulaVar("CMS_hh_modlin0"+postfix,"@0*@0","CMS_hh_lin0"+postfix);
 
-  l.rooContainer->AddRealVar("CMS_hll_plaw0"+postfix,0.01,-10,10);
+  l.rooContainer->AddRealVar("CMS_hh_plaw0"+postfix,0.01,-10,10);
 
-  l.rooContainer->AddRealVar("CMS_hll_voigtexp_0"+postfix, 91.186, 80.0, 100.0);
-  l.rooContainer->AddRealVar("CMS_hll_voigtexp_1"+postfix, 2.125, 0.0, 5.0);
-  l.rooContainer->AddRealVar("CMS_hll_voigtexp_2"+postfix, 5, 0, 10.0);
-  l.rooContainer->AddRealVar("CMS_hll_voigtexp_3"+postfix,-1.,-10.0,0.0);
-  l.rooContainer->AddRealVar("CMS_hll_voigtexp_4"+postfix, .5, .0 , 1.0);
+  l.rooContainer->AddRealVar("CMS_hh_voigtexp_0"+postfix, 91.186, 80.0, 100.0);
+  l.rooContainer->AddRealVar("CMS_hh_voigtexp_1"+postfix, 2.125, 0.0, 5.0);
+  l.rooContainer->AddRealVar("CMS_hh_voigtexp_2"+postfix, 5, 0, 10.0);
+  l.rooContainer->AddRealVar("CMS_hh_voigtexp_3"+postfix,-1.,-10.0,0.0);
+  l.rooContainer->AddRealVar("CMS_hh_voigtexp_4"+postfix, .5, .0 , 1.0);
 
-  //l.rooContainer->AddRealVar("CMS_hll_voigt_0"+postfix, 91.186, 88.0, 94.0);
-  //l.rooContainer->AddRealVar("CMS_hll_voigt_1"+postfix, 2.495, 0.0, 0.0);
-  //l.rooContainer->AddRealVar("CMS_hll_voigt_2"+postfix, 5., 0., 10.0);
+  //l.rooContainer->AddRealVar("CMS_hh_voigt_0"+postfix, 91.186, 88.0, 94.0);
+  //l.rooContainer->AddRealVar("CMS_hh_voigt_1"+postfix, 2.495, 0.0, 0.0);
+  //l.rooContainer->AddRealVar("CMS_hh_voigt_2"+postfix, 5., 0., 10.0);
 
   // prefix for models parameters
   std::map<int,std::string> parnames;
@@ -226,15 +225,15 @@ void SSLeptonAnalysis::buildBkgModel(LoopAll& l, const std::string& postfix) {
       std::string & parname = parnames[parnameIndex];
       if( catmodel > 0 ) {
         for(int iorder = 0; iorder<catmodel; ++iorder) {
-          std::cout << "HtoLL " <<   Form( "CMS_hll_%s%d%s", parname.c_str(), iorder, +postfix.c_str() ) << std::endl;
-          catpars.push_back( Form( "CMS_hll_%s%d%s", parname.c_str(), iorder, +postfix.c_str() ) );
+          std::cout << "HtoLL " <<   Form( "CMS_hh_%s%d%s", parname.c_str(), iorder, +postfix.c_str() ) << std::endl;
+          catpars.push_back( Form( "CMS_hh_%s%d%s", parname.c_str(), iorder, +postfix.c_str() ) );
         }
       } else {
         if( catmodel != -1 ) {
           std::cout << "The only supported negative bkg poly order is -1, ie 1-parmeter power law" << std::endl;
           assert( 0 );
         }
-        catpars.push_back( Form( "CMS_hll_%s%d%s", parname.c_str(), 0, +postfix.c_str() ) );
+        catpars.push_back( Form( "CMS_hh_%s%d%s", parname.c_str(), 0, +postfix.c_str() ) );
       }
     } else if ( catmodel != -1 ) {
       
@@ -252,11 +251,11 @@ void SSLeptonAnalysis::buildBkgModel(LoopAll& l, const std::string& postfix) {
     
     if( modit->first > 0 ) {
       l.rooContainer->AddSpecificCategoryPdf(&catflags[0],"data_voigtexp_model"+postfix,
-                                             "0","CMS_hll_mass", catpars, 7);
+                                             "0","CMS_hh_mass", catpars, 7);
       // >= 71 means RooBernstein of order >= 1
     } else {
       l.rooContainer->AddSpecificCategoryPdf(&catflags[0],"data_pol_model"+postfix,
-                                             "0","CMS_hll_mass",catpars,6);
+                                             "0","CMS_hh_mass",catpars,6);
       // 6 is power law
     }
   }
@@ -284,7 +283,7 @@ bool SSLeptonAnalysis::Analysis(LoopAll& l, Int_t jentry) {
   float weight = 1.;
   float pu_weight = 1.;
   int cur_type = l.itype[l.current];
-
+  
   if (cur_type != 0) {
     unsigned int n_pu = l.pu_n;
     pu_weight = getPuWeight(l.pu_n, cur_type, &(l.sampleContainer[l.current_sample_index]), jentry == 1);
@@ -295,7 +294,8 @@ bool SSLeptonAnalysis::Analysis(LoopAll& l, Int_t jentry) {
   
   for (int i=0; i<l.el_std_n; i++) {
     TLorentzVector* p4 = (TLorentzVector*)(l.el_std_p4_corr->At(i));
-    if (l.el_std_mva_trig[i] < eleIDCut and p4->Et() > 20.)
+    
+    if (ElectronMVACuts(l, i) and p4->Et() > 20.)
       goodEl.push_back(i);
   }
 
@@ -309,54 +309,94 @@ bool SSLeptonAnalysis::Analysis(LoopAll& l, Int_t jentry) {
   Float_t mass[100];
   Int_t type[100], cat[100];
 
+  float sumPt = 0;
   Int_t pairs = 0;
+  float temp_mass = 0;
+  int temp_type = -1, temp_cat = -1;
   if (goodMu.size() != 0) {
     for (unsigned int i=0; i<goodMu.size()-1; i++) {
       TLorentzVector* p1 = (TLorentzVector*)(l.mu_glo_p4_corr->At(goodMu[i]));
       for (unsigned int j=i+1; j<goodMu.size(); j++) {
 	if (l.mu_glo_charge[i] == l.mu_glo_charge[j]) {
 	  TLorentzVector* p2 = (TLorentzVector*)(l.mu_glo_p4_corr->At(goodMu[j]));
-	  mass[pairs] = (*p1+*p2).M();
-	  type[pairs] = 0;	
-	  cat[pairs] = categories(p1, p2);
-	  pairs++;
+	  
+	  float tempSumPt = p1->Pt() + p2->Pt();
+	  if (tempSumPt > sumPt) {
+	    sumPt = tempSumPt;
+	    temp_mass = (*p1+*p2).M();
+	    temp_type = 0;
+	    temp_cat = categories(p1, p2);
+	  }
 	}
       }
     }
   }
 
-  if (goodEl.size() != 0) {	
-  for (unsigned int i=0; i<goodEl.size()-1; i++) {
-    TLorentzVector* p1 = (TLorentzVector*)(l.el_std_p4_corr->At(goodEl[i]));
-    for (unsigned int j=i+1; j<goodEl.size(); j++) {
-      if (l.el_std_charge[i] == l.el_std_charge[j]) {
-	TLorentzVector* p2 = (TLorentzVector*)(l.el_std_p4_corr->At(goodEl[j]));
-	mass[pairs] = (*p1+*p2).M();
-	type[pairs] = 1;
-	cat[pairs] = categories(p1, p2);
-	pairs++;
-      }
-    }
-  }
+  if (sumPt > 0) {
+    sumPt = 0;
+    mass[pairs] = temp_mass;
+    type[pairs] = temp_type;
+    cat[pairs] = temp_cat;
+    pairs++;
   }
 
-  if (goodMu.size() != 0 and goodEl.size() != 0) {
-  for (unsigned int i=0; i<goodEl.size(); i++) {
-    TLorentzVector* p1 = (TLorentzVector*)(l.el_std_p4_corr->At(goodEl[i]));
-    for (unsigned int j=0; j<goodMu.size(); j++) {
-      if (l.el_std_charge[i] == l.mu_glo_charge[j]) {
-	TLorentzVector* p2 = (TLorentzVector*)(l.mu_glo_p4_corr->At(goodMu[j]));
-	mass[pairs] = (*p1+*p2).M();
-	type[pairs] = 2;
-	cat[pairs] = categories(p1, p2, true);
-	pairs++;
+  if (goodEl.size() != 0) {	
+    for (unsigned int i=0; i<goodEl.size()-1; i++) {
+      TLorentzVector* p1 = (TLorentzVector*)(l.el_std_p4_corr->At(goodEl[i]));
+      for (unsigned int j=i+1; j<goodEl.size(); j++) {
+	if (l.el_std_charge[i] == l.el_std_charge[j]) {
+	  TLorentzVector* p2 = (TLorentzVector*)(l.el_std_p4_corr->At(goodEl[j]));
+	  float tempSumPt = p1->Pt() + p2->Pt();
+	  if (tempSumPt > sumPt) {
+	    sumPt = tempSumPt;
+	    temp_mass = (*p1+*p2).M();
+	    temp_type = 1;
+	    temp_cat = categories(p1, p2);
+	  }
+	}
       }
     }
   }
+
+  if (sumPt > 0) {
+    sumPt = 0;
+    mass[pairs] = temp_mass;
+    type[pairs] = temp_type;
+    cat[pairs] = temp_cat;
+    pairs++;
+  }  
+
+
+  if (goodMu.size() != 0 and goodEl.size() != 0) {
+    for (unsigned int i=0; i<goodEl.size(); i++) {
+      TLorentzVector* p1 = (TLorentzVector*)(l.el_std_p4_corr->At(goodEl[i]));
+      for (unsigned int j=0; j<goodMu.size(); j++) {
+	if (l.el_std_charge[i] == l.mu_glo_charge[j]) {
+	  TLorentzVector* p2 = (TLorentzVector*)(l.mu_glo_p4_corr->At(goodMu[j]));
+	  float tempSumPt = p1->Pt() + p2->Pt();
+	  if (tempSumPt > sumPt) {
+	    sumPt = tempSumPt;
+	    temp_mass = (*p1+*p2).M();
+	    temp_type = 2;
+	    temp_cat = categories(p1, p2, true);
+	  }
+	}
+      }
+    }
+  }
+
+  if (sumPt > 0) {
+    sumPt = 0;
+    mass[pairs] = temp_mass;
+    type[pairs] = temp_type;
+    cat[pairs] = temp_cat;
+    pairs++;
   }
 
   if (pairs > 0) {
     Tree(l, pairs, type, mass, cat, weight, pu_weight);
+    //for (int i=0; i<pairs; i++) 
+    //  FillRooContainer(l, cur_type, mass[i], cat[i], weight);
     return true;
   }
 
@@ -368,32 +408,27 @@ void SSLeptonAnalysis::FillRooContainer(LoopAll& l, int cur_type, float mass, in
   if (cur_type == 0 ) {
     l.rooContainer->InputDataPoint("data_mass",category,mass);
   } else if (cur_type > 0 ) {
-    if( doMcOptimization ) {
-      l.rooContainer->InputDataPoint("data_mass",category,mass,weight);
-    } else if ( cur_type != 3 && cur_type != 4 ) {
-      l.rooContainer->InputDataPoint("bkg_mass",category,mass,weight);
-    }
+    //  if( doMcOptimization ) {
+    //   l.rooContainer->InputDataPoint("data_mass",category,mass,weight);
+    //} else if ( cur_type != 3 && cur_type != 4 ) {
+    l.rooContainer->InputDataPoint("bkg_mass",category,mass,weight);
+    //}
   } else if (cur_type < 0) {
     l.rooContainer->InputDataPoint("sig_"+GetSignalLabel(cur_type),category,mass,weight);
   }
 }
 
 void SSLeptonAnalysis::FillSignalLabelMap(LoopAll & l) {
-
-  //signalLabels[-113]="ggh_mass_m125";
-  //signalLabels[-213]="vbf_mass_m125";
-  //signalLabels[-313]="wzh_mass_m125";
-  //signalLabels[-413]="tth_mass_m125";
-  //signalLabels[-513]="rsg_mass_m125";
+  
+  signalLabels[-100]="lambdaXX";
 }
 
 std::string SSLeptonAnalysis::GetSignalLabel(int id) {
   // For the lazy man, can return a memeber of the map rather than doing it yourself
   std::map<int,std::string>::iterator it = signalLabels.find(id);
-  
+
   if (it!=signalLabels.end()){
     return it->second;
-    
   } else {
     
     std::cerr << "No Signal Type defined in map with id - " << id << std::endl;
@@ -431,6 +466,8 @@ void SSLeptonAnalysis::FillReductionVariables(LoopAll& l, int jentry) {
     else
       l.mu_glo_id_tight[i] = 0;
   }
+
+  MetCorrections2012(l);
 
 //  if (l.itype[l.current] < 0) {
 //    for (int i=0; i<l.gp_n; i++) {
@@ -566,7 +603,7 @@ void SSLeptonAnalysis::Tree(LoopAll& l, Int_t pairs, Int_t* type, Float_t* mass,
   l.FillTree("run", l.run);
   l.FillTree("lumis", l.lumis);
   l.FillTree("event", (double)l.event);
-  l.FillTree("itype", (float)l.itype[l.current]);
+  l.FillTree("itype", (int)l.itype[l.current]);
   l.FillTree("nvtx", (float)l.vtx_std_n);
   l.FillTree("rho", (float)l.rho_algo1);
   
@@ -576,7 +613,38 @@ void SSLeptonAnalysis::Tree(LoopAll& l, Int_t pairs, Int_t* type, Float_t* mass,
   l.FillTree("cat",    cat, pairs);
   l.FillTree("weight", (float)weight);
   l.FillTree("pu_weight", (float)pu_weight);
+  l.FillTree("met", (float)l.met_pfmet);
+  l.FillTree("metPhi", (float)l.met_phi_pfmet);
+  
+  Bool_t jetid_flags[100];
+  for(int ijet=0; ijet<l.jet_algoPF1_n; ++ijet ) {
+    jetid_flags[ijet] = PileupJetIdentifier::passJetId((*l.jet_algoPF1_cutbased_wp_level_ext)[ijet][0], PileupJetIdentifier::kLoose);
+  }
+
+  std::vector<int> selectedJets = l.SelectNHighestPtJets(l.el_std_p4_corr, l.mu_glo_p4_corr, jetid_flags, 30, 2.4, 0.6);
+  int njets = selectedJets.size();
+  l.FillTree("njets", (int) njets);
+
+  Float_t btag[100];
+  if (njets > 0) {
+    std::vector<float> jetEnergies;
+    for (unsigned int i=0; i<selectedJets.size(); i++)
+      jetEnergies.push_back(((TLorentzVector*)l.jet_algoPF1_p4->At(selectedJets[i]))->Et());
+
+    for (unsigned int i1=0; i1<selectedJets.size()-1; ++i1) {
+      for (unsigned int i2=i1+1; i2<selectedJets.size(); ++i2) {
+	if (jetEnergies[i1] < jetEnergies[i2]) {
+	  std::swap(selectedJets[i1], selectedJets[i2]);
+	  std::swap(jetEnergies[i1], jetEnergies[i2]);
+	}
+      }
+    }
     
+    for (unsigned int i=0; i<njets; i++) 
+      btag[i] = l.jet_algoPF1_csvBtag[selectedJets[i]];
+  }
+
+  l.FillTree("btag", btag, njets);
 }
 
 bool SSLeptonAnalysis::checkEventHLT(LoopAll& l, std::vector<std::string> paths) {
@@ -610,4 +678,104 @@ bool SSLeptonAnalysis::checkEventHLT(LoopAll& l, std::vector<std::string> paths)
   }
 
   return result;
+}
+
+void SSLeptonAnalysis::MetCorrections2012(LoopAll& l)
+{
+    //shift met (reduction step)
+    //in mc smearing should be applied first and then shifting
+    //both these are performed at analysis step
+    TLorentzVector unpfMET;
+    unpfMET.SetPxPyPzE (l.met_pfmet*cos(l.met_phi_pfmet),
+           l.met_pfmet*sin(l.met_phi_pfmet),
+           0,
+           sqrt(l.met_pfmet*cos(l.met_phi_pfmet) * l.met_pfmet*cos(l.met_phi_pfmet)
+           + l.met_pfmet*sin(l.met_phi_pfmet) * l.met_pfmet*sin(l.met_phi_pfmet)));
+
+    bool isMC = l.itype[l.current]!=0;
+
+    TLorentzVector shiftMET_corr = l.shiftMet(&unpfMET,isMC);
+    l.shiftMET_pt = shiftMET_corr.Pt();
+    l.shiftMET_phi = shiftMET_corr.Phi();
+    l.shiftMET_eta = shiftMET_corr.Eta();
+    l.shiftMET_e = shiftMET_corr.Energy();
+}
+
+
+void SSLeptonAnalysis::MetCorrections2012_Simple(LoopAll& l,TLorentzVector lead_p4 ,TLorentzVector sublead_p4)
+{
+    // mc: scaling and shifting, data: scaling (analysis step)
+    TLorentzVector unpfMET;
+    unpfMET.SetPxPyPzE (l.met_pfmet*cos(l.met_phi_pfmet),
+           l.met_pfmet*sin(l.met_phi_pfmet),
+           0,
+           sqrt(l.met_pfmet*cos(l.met_phi_pfmet) * l.met_pfmet*cos(l.met_phi_pfmet)
+           + l.met_pfmet*sin(l.met_phi_pfmet) * l.met_pfmet*sin(l.met_phi_pfmet)));
+
+     bool isMC = l.itype[l.current]!=0;
+
+     //take shifted met for data
+     TLorentzVector shiftedMET;
+     double shiftedMETpt = l.shiftMET_pt;
+     double shiftedMETe = l.shiftMET_e;
+     double shiftedMETeta = l.shiftMET_eta;
+     double shiftedMETphi = l.shiftMET_phi;
+
+     shiftedMET.SetPtEtaPhiE(shiftedMETpt,shiftedMETeta,shiftedMETphi,shiftedMETe);
+
+     if (isMC) {
+       //smear raw met for mc
+       TLorentzVector smearMET_corr = l.correctMet_Simple( lead_p4, sublead_p4 , &unpfMET, true, false);
+       l.smearMET_pt = smearMET_corr.Pt();
+       l.smearMET_phi = smearMET_corr.Phi();
+       //shift smeared met for mc
+       TLorentzVector shiftsmearMET_corr = l.shiftMet(&smearMET_corr,isMC);
+       l.shiftsmearMET_pt = shiftsmearMET_corr.Pt();
+       l.shiftsmearMET_phi = shiftsmearMET_corr.Phi();
+       l.correctedpfMET = l.shiftsmearMET_pt;
+       l.correctedpfMET_phi = l.shiftsmearMET_phi;
+     } else {
+       //scale shifted met for data
+       TLorentzVector shiftscaleMET_corr = l.correctMet_Simple( lead_p4, sublead_p4 , &shiftedMET, false , true);
+       l.shiftscaleMET_pt = shiftscaleMET_corr.Pt();
+       l.shiftscaleMET_phi = shiftscaleMET_corr.Phi();
+       l.correctedpfMET = l.shiftscaleMET_pt;
+       l.correctedpfMET_phi = l.shiftscaleMET_phi;
+     }
+}
+
+bool SSLeptonAnalysis::ElectronMVACuts(LoopAll& l, int el_ind) {
+
+  bool pass=false;
+  if(el_ind < 0 || el_ind >= l.el_std_n) 
+    return pass;
+
+  if(l.el_std_mva_trig[el_ind] < eleIDCut) 
+    return pass;
+
+  TLorentzVector* thisel = (TLorentzVector*) l.el_std_p4->At(el_ind);
+  TLorentzVector* thissc = (TLorentzVector*) l.el_std_sc->At(el_ind);
+  float thiseta = fabs(thissc->Eta());
+  float thispt = thisel->Pt();
+  if(thiseta>2.5 || (thiseta>1.442 && thiseta<1.566)) return pass;
+  double Aeff=0.;
+  
+  if(thiseta<1.0)                   Aeff=0.135;
+  if(thiseta>=1.0 && thiseta<1.479) Aeff=0.168;
+  if(thiseta>=1.479 && thiseta<2.0) Aeff=0.068;
+  if(thiseta>=2.0 && thiseta<2.2)   Aeff=0.116;
+  if(thiseta>=2.2 && thiseta<2.3)   Aeff=0.162;
+  if(thiseta>=2.3 && thiseta<2.4)   Aeff=0.241;
+  if(thiseta>=2.4)                  Aeff=0.23;
+  float thisiso=l.el_std_pfiso_charged[el_ind]+std::max(l.el_std_pfiso_neutral[el_ind]+l.el_std_pfiso_photon[el_ind]-l.rho_algo1*Aeff,0.);
+    
+  if (thisiso/thispt >0.15) 
+    return pass;  
+
+  if(l.el_std_hp_expin[el_ind]>1) return pass;
+
+  //if(l.el_std_conv[el_ind]==0)    return pass;
+
+  pass=true;
+  return pass;
 }

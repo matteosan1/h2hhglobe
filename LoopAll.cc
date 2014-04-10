@@ -1231,7 +1231,10 @@ void LoopAll::GetEntry(std::set<TBranch *> & branches, int jentry)
 // ------------------------------------------------------------------------------------
 void LoopAll::BookTreeBranch(std::string name, int type, std::string limit,std::string dirName){
   for(unsigned int ind=0; ind<treeContainer[dirName].size(); ind++) {
-    treeContainer[dirName][ind].AddTreeBranch(name,type);
+    if (limit == "")
+      treeContainer[dirName][ind].AddTreeBranch(name,type);
+    else
+      treeContainer[dirName][ind].AddTreeBranch(name,type, limit);
   }
 }
 // ------------------------------------------------------------------------------------
