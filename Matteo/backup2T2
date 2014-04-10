@@ -1,0 +1,104 @@
+#! /usr/bin/python
+import time
+import os, sys
+import getopt
+
+#----------------------------------------------------------------------
+# main
+#----------------------------------------------------------------------
+
+usage = """
+tier2transfer [options]
+
+--input-dir, -i                    origin directory
+--output-dir, -o                   destination directory
+--wildcard, -w                     selects only directories with wc to transfer
+--cycles, -c                       number of times to repeat the transfer
+"""
+
+counter   = 1
+NUMPARA   = 60
+flag      = 0
+inputDir  = ""
+outputDir = ""
+wildcard  = ""
+cycles    = 0
+
+(opts, args) = getopt.getopt(sys.argv[1:], 'i:o:hw:c:', ['toHadoopFromEOS', 'toHadoopFromCASTOR', 'toCastorFromHadoop', 'toEOSFromHadoop', 'input-dir=', 'output-dir=', 'help', 'wildcard=', 'cycles='])
+
+for opt,argm in opts:
+    if (opt == "--help" or opt == "-h"):
+        print 'Usage: %s' % (usage)
+        sys.exit(0)
+    elif (opt == "-i" or opt == "--input-dir"):
+        inputDir = argm
+    elif (opt == "-o" or opt == "--output-dir"):
+        outputDir = argm        
+    elif (opt == "-w" or opt == "--wildcard"):
+        wildcard = argm
+    elif (opt == "-c" or opt == "--cycles"):
+        cycles = int(argm)
+    else:
+        print 'Wrong options: %s' % (opt)
+        sys.exit(3)
+
+if (inputDir == "" or outputDir == ""):
+    print "You must specify input and output directories !"
+    print 'Usage: %s' % (usage)
+    sys.exit(-1)
+
+#for c in xrange(cycles):
+mysearch = inputDir.split("eos/cms/store/caf/user/sani")[1]
+dirs = os.popen("/afs/cern.ch/project/eos/installation/0.3.15/bin/eos.select find "+ inputDir + " --name *").readlines()
+myHadoop = outputDir
+
+print "copying: " + str(len(dirs)) + " files."
+sleepcount = 0
+for file in dirs:
+    if (wildcard not in file and wildcard != ""):
+        continue
+    file = file.split("\n")[0];
+    if (file.endswith("/")):
+        continue
+
+    file_info = os.popen("/afs/cern.ch/project/eos/installation/0.3.15/bin/eos.select ls -l " + file).readlines()[0]
+    original_size = file_info.split()[4]
+    print original_size, mysearch
+    # check files existence and size
+    line = """
+lcg-ls -b -l -V cms -D srmv2 \"srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=%s/%s\"
+""" % (myHadoop, file.split("sani/")[1])
+    #print line
+    input,checkOutput = os.popen2(line)
+    hadoop_file_info = checkOutput.readlines()
+    toCopy = False
+    if (len(hadoop_file_info) == 0):
+        toCopy = True
+        print "Didn't find the file"
+    else:
+        print hadoop_file_info
+        hadoop_file_size = hadoop_file_info[0].split()[4]
+        if (hadoop_file_size != original_size):
+            print "hadoop_file_size, filesize  "+str(hadoop_file_size)+"  "+str(original_size)
+            toCopy = True
+            print "File is not the right size"             
+
+    if toCopy == False:
+        continue
+
+    line="""
+lcg-cp -b -V cms -U srmv2 -T srmv2 -n 12 \"srm://srm-eoscms.cern.ch:8443/srm/v2/server?SFN=%s\" \"srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=%s/%s\" &
+""" % (file, myHadoop, file.split("sani/")[1])
+    #print line
+    #print file
+    os.system(line)
+
+    sleepcount=sleepcount+1
+    while (sleepcount>20):
+        sleepcount = int(os.popen("ps | grep lcg-cp | wc | awk '{print $1}'").readlines()[0])
+        #else:
+        print "MAX THREADS - Sleeping for 30 sec - "+str(sleepcount)
+        time.sleep(60)
+        #sleepcount = 0
+    
+

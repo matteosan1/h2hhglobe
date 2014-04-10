@@ -48,12 +48,28 @@ if __name__ == "__main__":
     parser.add_option("--eth", action="store_true", default=False, help="to process samples at ETH [default: %default].")
     parser.add_option("--ucsd", action="store_true", default=False, help="to process samples at UCSD [default: %default].")
     parser.add_option("-n", action="store", type="int", dest="numberofjobs", default="0", help="number of jobs of the task.")
-    
+    parser.add_option("--resubmit", action="store", type="string", dest="jobtoresubmit", default="", help="resubmit specified jobs.")
+    parser.add_option("--resubmit-failed", dest="resubmit_failed", action="store_true", default=False, help="resubmit failed jobs.")
+
     (options, args) = parser.parse_args()
 
-    #if len(args) < 8:
-    #    parser.print_usage()
-    #    raise RuntimeError("Need exactly nine arguements to work.")
+    if (options.resubmit_failed):
+        a  = os.popen("ls -1 "+options.tag+"/*.fail")
+        for f in a.readlines():
+            filename = f.split("/")[1]
+            os.system("rm "+f.split("\n")[0])
+            number = re.findall('\d+', filename)
+            txtfilename = "sub"+ str(number) + ".sh"
+            os.system("bsub -q cmscaf1nd -o $PWD/"+options.tag +"/" +txtfilename+".log $PWD/"+options.tag+"/"+txtfilename)
+        sys.exit(0)
+        
+    if (options.jobtoresubmit != ""):
+        jobs = options.jobtoresubmit.split(",")
+        for j in jobs:
+            txtfilename = "sub"+ j + ".sh"
+            os.system("bsub -q cmscaf1nd -o $PWD/"+options.tag +"/" +txtfilename+".log $PWD/"+options.tag+"/"+txtfilename)
+        sys.exit(0)
+        
     options.eosLs = "/afs/cern.ch/project/eos/installation/0.3.1-22/bin/eos.select root://eoscms ls -l /eos/cms"
     print "\nPreparing batch reduction...\n"
 
@@ -221,7 +237,7 @@ if __name__ == "__main__":
             out2.write("let \"number %= $RANGE\"\n")
             out2.write("sleep $number\n")
             outputfile = outputfilename + "_job" + str(numberofjobs) +".root"
-            out2.write("xrdcp -f /tmp/sani/" + outputfile + " root://eoscms//eos/cms/store/caf/user/sani/" + options.tag + "/"+outputfile+"\n")
+            out2.write("xrdcp --retry 60 -f /tmp/sani/" + outputfile + " root://eoscms//eos/cms/store/caf/user/sani/" + options.tag + "/"+outputfile+"\n")
             out2.write("if [ \"$?\" -eq 0 ]; then\n")
             out2.write("  touch "+txtfilename+".done\n")
             out2.write("else\n")
