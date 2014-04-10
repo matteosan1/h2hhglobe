@@ -3,6 +3,61 @@
 #include "TRandom3.h"
 #define GFDEBUG 0
 
+std::vector<int> LoopAll::SelectNHighestPtJets(TClonesArray* p41s, TClonesArray* p42s, Bool_t * jetid_flags,
+                                               float ptMin, float etaMax, float dr2pho) {
+
+  std::vector<int> myJets;
+  if(GFDEBUG)
+    std::cout << "SelectNHighestPtJets--start" << std::endl;
+
+  for(int j1_i=0; j1_i<jet_algoPF1_n; j1_i++){
+    TLorentzVector* j1p4 = (TLorentzVector*) jet_algoPF1_p4->At(j1_i);
+    if(GFDEBUG)
+      std::cout<<"jet "<<j1_i<<std::endl;
+    if (j1p4->Pt() < ptMin)
+      continue;
+    if(GFDEBUG)
+      std::cout<<"passing pu id?"<<std::endl;
+    if(jetid_flags != 0 && !jetid_flags[j1_i])
+      continue;
+    if(GFDEBUG)
+      std::cout<<"within eta 4.7?"<<std::endl;
+    if(fabs(j1p4->Eta()) > etaMax)
+      continue;
+    if(GFDEBUG)
+      std::cout<<"close to pho?"<<std::endl;
+    bool drToObject = true;
+    for(int i=0; i<p41s->GetEntries(); i++) {
+      TLorentzVector* p4 = (TLorentzVector*)p41s->At(i);
+      if (p4->Et() < 20.)
+        continue;
+      if(j1p4->DeltaR(*p4) < dr2pho) {
+        drToObject = false;
+        break;
+      }
+    }
+    if (!drToObject)
+      continue;
+
+    for(int i=0; i<p42s->GetEntries(); i++) {
+      TLorentzVector* p4 = (TLorentzVector*)p42s->At(i);
+      if (p4->Et() < 20.)
+        continue;
+      if(j1p4->DeltaR(*p4) < dr2pho) {
+        drToObject = false;
+        break;
+      }
+    }
+    if (!drToObject)
+      continue;
+
+    myJets.push_back(j1_i);
+  }
+
+  return myJets;
+}
+
+
 float LoopAll::pfTkIsoWithVertex(int phoindex, int vtxInd, float dRmax, float dRvetoBarrel, float dRvetoEndcap, 
                                  float ptMin, float dzMax, float dxyMax, int pfToUse) {
   

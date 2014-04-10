@@ -13,7 +13,11 @@ type=2 name=pu_weight
 type=0 name=nvtx
 type=2 name=rho
 type=0 name=pairs
+type=0 name=njets
+type=2 name=met
+type=2 name=metPhi
 type=12 name=mass size=pairs
 type=10 name=cat  size=pairs  
 type=10 name=type size=pairs
+type=12 name=btag size=njets
 
