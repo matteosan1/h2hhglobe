@@ -308,10 +308,13 @@ bool SSLeptonAnalysis::Analysis(LoopAll& l, Int_t jentry) {
 
   Float_t mass[100];
   Int_t type[100], cat[100];
+  Int_t index1[10], index2[10];
 
   float sumPt = 0;
   Int_t pairs = 0;
   float temp_mass = 0;
+  float temp_id1=-9999, temp_id2=-9999., temp_iso1=-9999., temp_iso2=-9999.;
+  int temp_index1 = -1, temp_index2 = -1;
   int temp_type = -1, temp_cat = -1;
   if (goodMu.size() != 0) {
     for (unsigned int i=0; i<goodMu.size()-1; i++) {
@@ -326,6 +329,8 @@ bool SSLeptonAnalysis::Analysis(LoopAll& l, Int_t jentry) {
 	    temp_mass = (*p1+*p2).M();
 	    temp_type = 0;
 	    temp_cat = categories(p1, p2);
+	    temp_index1 = goodMu[i];
+	    temp_index2 = goodMu[j];
 	  }
 	}
       }
@@ -337,6 +342,8 @@ bool SSLeptonAnalysis::Analysis(LoopAll& l, Int_t jentry) {
     mass[pairs] = temp_mass;
     type[pairs] = temp_type;
     cat[pairs] = temp_cat;
+    index1[pairs] = temp_index1;
+    index2[pairs] = temp_index2;
     pairs++;
   }
 
@@ -352,6 +359,8 @@ bool SSLeptonAnalysis::Analysis(LoopAll& l, Int_t jentry) {
 	    temp_mass = (*p1+*p2).M();
 	    temp_type = 1;
 	    temp_cat = categories(p1, p2);
+	    temp_index1 = goodEl[i];
+	    temp_index2 = goodEl[j];
 	  }
 	}
       }
@@ -362,7 +371,9 @@ bool SSLeptonAnalysis::Analysis(LoopAll& l, Int_t jentry) {
     sumPt = 0;
     mass[pairs] = temp_mass;
     type[pairs] = temp_type;
-    cat[pairs] = temp_cat;
+    cat[pairs] = temp_cat; 
+    index1[pairs] = temp_index1;
+    index2[pairs] = temp_index2;
     pairs++;
   }  
 
@@ -379,6 +390,8 @@ bool SSLeptonAnalysis::Analysis(LoopAll& l, Int_t jentry) {
 	    temp_mass = (*p1+*p2).M();
 	    temp_type = 2;
 	    temp_cat = categories(p1, p2, true);
+	    temp_index1 = goodEl[i];
+	    temp_index2 = goodMu[j];
 	  }
 	}
       }
@@ -389,12 +402,14 @@ bool SSLeptonAnalysis::Analysis(LoopAll& l, Int_t jentry) {
     sumPt = 0;
     mass[pairs] = temp_mass;
     type[pairs] = temp_type;
-    cat[pairs] = temp_cat;
+    cat[pairs] = temp_cat; 
+    index1[pairs] = temp_index1;
+    index2[pairs] = temp_index2;
     pairs++;
   }
-
+  
   if (pairs > 0) {
-    Tree(l, pairs, type, mass, cat, weight, pu_weight);
+    Tree(l, pairs, type, mass, cat, index1, index2, weight, pu_weight);
     //for (int i=0; i<pairs; i++) 
     //  FillRooContainer(l, cur_type, mass[i], cat[i], weight);
     return true;
@@ -597,7 +612,7 @@ void SSLeptonAnalysis::ReducedOutputTree(LoopAll &l, TTree * outputTree) {
 void SSLeptonAnalysis::ResetAnalysis()
 {}
 
-void SSLeptonAnalysis::Tree(LoopAll& l, Int_t pairs, Int_t* type, Float_t* mass, Int_t* cat,
+void SSLeptonAnalysis::Tree(LoopAll& l, Int_t pairs, Int_t* type, Float_t* mass, Int_t* cat, Int_t* index1, Int_t* index2,
 			    Float_t weight, Float_t pu_weight) {
 
   l.FillTree("run", l.run);
@@ -611,6 +626,52 @@ void SSLeptonAnalysis::Tree(LoopAll& l, Int_t pairs, Int_t* type, Float_t* mass,
   l.FillTree("type",  type, pairs);
   l.FillTree("mass",  mass, pairs);
   l.FillTree("cat",    cat, pairs);
+
+  int ch1_1[100], ch2_1[100], ch3_1[100];
+  int ch1_2[100], ch2_2[100], ch3_2[100];
+  Float_t id1[100], id2[100], iso1[100], iso2[100];
+  for (unsigned int i=0; i<pairs; i++) {
+    if (type[i] == 0) {
+      id1[i] = 9999;
+      id2[i] = 9999;
+      iso1[i] = 9999;
+      iso2[i] = 9999;
+      ch1_1[i] = l.mu_glo_charge[index1[i]];
+      ch2_1[i] = l.mu_glo_charge[index1[i]];
+      ch3_1[i] = l.mu_glo_charge[index1[i]];
+      ch1_2[i] = l.mu_glo_charge[index2[i]];
+      ch2_2[i] = l.mu_glo_charge[index2[i]];
+      ch3_2[i] = l.mu_glo_charge[index2[i]];
+      
+    } else if (type[i] == 1) {
+      id1[i]  = l.el_std_mva_trig[index1[i]];
+      id2[i]  = l.el_std_mva_trig[index2[i]];
+      iso1[i] = ElectronIsolation(l, index1[i], fabs(((TLorentzVector*)l.el_std_sc->At(index1[i]))->Eta()));
+      iso2[i] = ElectronIsolation(l, index2[i], fabs(((TLorentzVector*)l.el_std_sc->At(index2[i]))->Eta()));
+      ch1_1[i] = l.el_std_charge[index1[i]];
+      ch2_1[i] = l.el_std_ch_gsf[index1[i]];
+      ch3_1[i] = l.el_std_ch_scpix[index1[i]];
+      ch1_2[i] = l.el_std_charge[index2[i]];
+      ch2_2[i] = l.el_std_ch_gsf[index2[i]];
+      ch3_2[i] = l.el_std_ch_scpix[index2[i]];
+    } else {
+      id1[i]  = l.el_std_mva_trig[index1[i]];
+      id2[i] = 9999;
+      iso1[i] = ElectronIsolation(l, index1[i], fabs(((TLorentzVector*)l.el_std_sc->At(index1[i]))->Eta()));
+      iso2[i] = 9999;
+      ch1_1[i] = l.el_std_charge[index1[i]];
+      ch2_1[i] = l.el_std_ch_gsf[index1[i]];
+      ch3_1[i] = l.el_std_ch_scpix[index1[i]];
+      ch1_2[i] = l.mu_glo_charge[index2[i]];
+      ch2_2[i] = l.mu_glo_charge[index2[i]];
+      ch3_2[i] = l.mu_glo_charge[index2[i]];
+
+    }
+  }
+  l.FillTree("id1",    id1, pairs);
+  l.FillTree("iso1",   iso1, pairs);
+  l.FillTree("id2",    id2, pairs);
+  l.FillTree("iso2",   iso2, pairs);
   l.FillTree("weight", (float)weight);
   l.FillTree("pu_weight", (float)pu_weight);
   l.FillTree("met", (float)l.met_pfmet);
@@ -626,6 +687,7 @@ void SSLeptonAnalysis::Tree(LoopAll& l, Int_t pairs, Int_t* type, Float_t* mass,
   l.FillTree("njets", (int) njets);
 
   Float_t btag[100];
+  Float_t btag2[100];
   if (njets > 0) {
     std::vector<float> jetEnergies;
     for (unsigned int i=0; i<selectedJets.size(); i++)
@@ -645,6 +707,22 @@ void SSLeptonAnalysis::Tree(LoopAll& l, Int_t pairs, Int_t* type, Float_t* mass,
   }
 
   l.FillTree("btag", btag, njets);
+
+  for (unsigned int i=0; i<l.jet_algoPF1_n; i++) 
+    btag2[i] = l.jet_algoPF1_csvBtag[i];
+
+  for (unsigned int i=0; i<l.jet_algoPF1_n-1; i++) {
+    for (unsigned int j=i+1; j<l.jet_algoPF1_n;j++) {
+      if (btag2[i] < btag2[j]) {
+	float temp = btag2[j];
+	btag2[j] = btag2[i];
+	btag2[i] = temp;
+      }
+    }
+  }
+
+  l.FillTree("btag2", btag2, 4);
+    
 }
 
 bool SSLeptonAnalysis::checkEventHLT(LoopAll& l, std::vector<std::string> paths) {
@@ -722,7 +800,6 @@ void SSLeptonAnalysis::MetCorrections2012_Simple(LoopAll& l,TLorentzVector lead_
      double shiftedMETphi = l.shiftMET_phi;
 
      shiftedMET.SetPtEtaPhiE(shiftedMETpt,shiftedMETeta,shiftedMETphi,shiftedMETe);
-
      if (isMC) {
        //smear raw met for mc
        TLorentzVector smearMET_corr = l.correctMet_Simple( lead_p4, sublead_p4 , &unpfMET, true, false);
@@ -744,6 +821,25 @@ void SSLeptonAnalysis::MetCorrections2012_Simple(LoopAll& l,TLorentzVector lead_
      }
 }
 
+float SSLeptonAnalysis::ElectronIsolation(LoopAll& l, int el_ind, float eta) {
+
+  if(eta>2.5 || (eta>1.442 && eta<1.566)) 
+    return 9999.;
+
+  double Aeff=0.;
+  
+  if(eta<1.0)                   Aeff=0.135;
+  if(eta>=1.0 && eta<1.479) Aeff=0.168;
+  if(eta>=1.479 && eta<2.0) Aeff=0.068;
+  if(eta>=2.0 && eta<2.2)   Aeff=0.116;
+  if(eta>=2.2 && eta<2.3)   Aeff=0.162;
+  if(eta>=2.3 && eta<2.4)   Aeff=0.241;
+  if(eta>=2.4)                  Aeff=0.23;
+  float thisiso=l.el_std_pfiso_charged[el_ind]+std::max(l.el_std_pfiso_neutral[el_ind]+l.el_std_pfiso_photon[el_ind]-l.rho_algo1*Aeff,0.);
+    
+  return thisiso;
+}
+
 bool SSLeptonAnalysis::ElectronMVACuts(LoopAll& l, int el_ind) {
 
   bool pass=false;
@@ -757,22 +853,13 @@ bool SSLeptonAnalysis::ElectronMVACuts(LoopAll& l, int el_ind) {
   TLorentzVector* thissc = (TLorentzVector*) l.el_std_sc->At(el_ind);
   float thiseta = fabs(thissc->Eta());
   float thispt = thisel->Pt();
-  if(thiseta>2.5 || (thiseta>1.442 && thiseta<1.566)) return pass;
-  double Aeff=0.;
   
-  if(thiseta<1.0)                   Aeff=0.135;
-  if(thiseta>=1.0 && thiseta<1.479) Aeff=0.168;
-  if(thiseta>=1.479 && thiseta<2.0) Aeff=0.068;
-  if(thiseta>=2.0 && thiseta<2.2)   Aeff=0.116;
-  if(thiseta>=2.2 && thiseta<2.3)   Aeff=0.162;
-  if(thiseta>=2.3 && thiseta<2.4)   Aeff=0.241;
-  if(thiseta>=2.4)                  Aeff=0.23;
-  float thisiso=l.el_std_pfiso_charged[el_ind]+std::max(l.el_std_pfiso_neutral[el_ind]+l.el_std_pfiso_photon[el_ind]-l.rho_algo1*Aeff,0.);
-    
-  if (thisiso/thispt >0.15) 
-    return pass;  
-
-  if(l.el_std_hp_expin[el_ind]>1) return pass;
+  float thisiso = ElectronIsolation(l, el_ind, thiseta);
+  if (thisiso/thispt > 0.15)
+    return pass;
+  
+  if(l.el_std_hp_expin[el_ind]>1) 
+    return pass;
 
   //if(l.el_std_conv[el_ind]==0)    return pass;
 

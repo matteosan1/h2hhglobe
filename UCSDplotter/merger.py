@@ -10,6 +10,7 @@ parser.add_option("-r", "--remove", default="", help="List of tags to remove")
 (options, arg) = parser.parse_args()
 
 tags_to_remove = options.remove.split(",")
+print tags_to_remove
 dirname = options.dirname
 
 #tree = []
@@ -37,8 +38,8 @@ for k in keys:
             if (t in name):
                 toSkip = True
                 break
-            if (toSkip and len(tags_to_remove) > 0):
-                continue
+        if (toSkip):
+            continue
 
     if (className == "TTree"):
         if ((name == "lumi") or (name == "plotvariables") or (name == "inputfiles")):
@@ -55,9 +56,10 @@ if (list.GetEntries() > 0):
     out.cd()
     opttree = ROOT.TTree.MergeTrees(list)
     opttree.SetName(options.treename)
-    f.Close()
     opttree.Write()
     out.Close()
+    f.Close()
+
 #  
 #
 #  out = new TFile(outfilename, "update");
