@@ -32,8 +32,9 @@ class SSLeptonAnalysis : public StatAnalysis {
   virtual bool Analysis(LoopAll&, Int_t);
 
   bool ElectronMVACuts(LoopAll& l, int i);
+  float ElectronIsolation(LoopAll& l, int i, float e);
   bool checkEventHLT(LoopAll& l, std::vector<std::string> paths);
-  void Tree(LoopAll& l, Int_t pairs, Int_t* type, Float_t* mass, Int_t* cat, Float_t weight, Float_t pu_weight);
+  void Tree(LoopAll& l, Int_t pairs, Int_t* type, Float_t* mass, Int_t* cat, Int_t* id1, Int_t* id2, Float_t weight, Float_t pu_weight);
   void FillRooContainer(LoopAll& l, int cur_type, float mass, int category, float weight);
   void FillSignalLabelMap(LoopAll & l);
   void buildBkgModel(LoopAll& l, const std::string & postfix);

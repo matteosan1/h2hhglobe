@@ -17,7 +17,18 @@ type=0 name=njets
 type=2 name=met
 type=2 name=metPhi
 type=12 name=mass size=pairs
+type=12 name=id1 size=pairs
+type=12 name=id2 size=pairs
+type=12 name=iso1 size=pairs
+type=12 name=iso2 size=pairs
 type=10 name=cat  size=pairs  
+type=10 name=ch1_1  size=pairs  
+type=10 name=ch2_1  size=pairs  
+type=10 name=ch3_1  size=pairs  
+type=10 name=ch1_2  size=pairs  
+type=10 name=ch2_2  size=pairs  
+type=10 name=ch3_2  size=pairs  
 type=10 name=type size=pairs
 type=12 name=btag size=njets
+type=12 name=btag2 size=4
 
