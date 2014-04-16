@@ -67,7 +67,6 @@ def makePlots(processCats, pairCats, isBlind):
     stacks = []
     for j in xrange(pairCats):
         canvases.append(ROOT.TCanvas("c"+str(j), "c"+str(j)))
-        hMass[j+3].Scale(10)
         hMass[j+3].SetFillStyle(0)
         hMass[j+3].SetLineWidth(2)
         hMass[j+3].SetLineColor(colors[1])        
@@ -87,7 +86,6 @@ def makePlots(processCats, pairCats, isBlind):
             stacks[-1].Add(hMET[j+i*3])
 
         stacks[-1].Draw()
-        hMET[j+3].Scale(10)
         hMET[j+3].SetFillStyle(0)
         hMET[j+3].SetLineWidth(2)
         hMET[j+3].SetLineColor(colors[1])        
@@ -100,7 +98,6 @@ def makePlots(processCats, pairCats, isBlind):
             stacks[-1].Add(hBtag[j+i*3])
 
         stacks[-1].Draw()
-        hBtag[j+3].Scale(10)
         hBtag[j+3].SetFillStyle(0)
         hBtag[j+3].SetLineWidth(2)
         hBtag[j+3].SetLineColor(colors[1])        
@@ -121,7 +118,7 @@ wsProducer = WSProducer()
 wsProducer.prepareDataSets(3)
 histograms(8)
 
-file = ROOT.TFile("UCSDplotter/sslep_v4.root")
+file = ROOT.TFile("UCSDplotter/sslept_v1.root")
 tree = file.Get("opttree")
 tree.SetBranchStatus("*",0)
 tree.SetBranchStatus("itype",1)
@@ -149,8 +146,8 @@ for z in xrange(entries):
         if (tree.type[pair]>0 and tree.met < 50.):
             continue 
 
-        if (tree.btag[0] > 0.6 or tree.btag[1] > 0.6):
-            continue
+        #if (tree.btag[0] > 0.6 or tree.btag[1] > 0.6):
+        #    continue
 
         if (tree.mass[pair] > 8.):
             hMass[tree.type[pair]+processCat*3].Fill(tree.mass[pair], tree.weight)

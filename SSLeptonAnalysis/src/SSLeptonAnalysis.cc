@@ -320,7 +320,7 @@ bool SSLeptonAnalysis::Analysis(LoopAll& l, Int_t jentry) {
     for (unsigned int i=0; i<goodMu.size()-1; i++) {
       TLorentzVector* p1 = (TLorentzVector*)(l.mu_glo_p4_corr->At(goodMu[i]));
       for (unsigned int j=i+1; j<goodMu.size(); j++) {
-	if (l.mu_glo_charge[i] == l.mu_glo_charge[j]) {
+	if (l.mu_glo_charge[goodMu[i]] == l.mu_glo_charge[goodMu[j]]) {
 	  TLorentzVector* p2 = (TLorentzVector*)(l.mu_glo_p4_corr->At(goodMu[j]));
 	  
 	  float tempSumPt = p1->Pt() + p2->Pt();
@@ -351,7 +351,7 @@ bool SSLeptonAnalysis::Analysis(LoopAll& l, Int_t jentry) {
     for (unsigned int i=0; i<goodEl.size()-1; i++) {
       TLorentzVector* p1 = (TLorentzVector*)(l.el_std_p4_corr->At(goodEl[i]));
       for (unsigned int j=i+1; j<goodEl.size(); j++) {
-	if (l.el_std_charge[i] == l.el_std_charge[j]) {
+	if (l.el_std_charge[goodEl[i]] == l.el_std_charge[goodEl[j]]) {
 	  TLorentzVector* p2 = (TLorentzVector*)(l.el_std_p4_corr->At(goodEl[j]));
 	  float tempSumPt = p1->Pt() + p2->Pt();
 	  if (tempSumPt > sumPt) {
@@ -382,7 +382,7 @@ bool SSLeptonAnalysis::Analysis(LoopAll& l, Int_t jentry) {
     for (unsigned int i=0; i<goodEl.size(); i++) {
       TLorentzVector* p1 = (TLorentzVector*)(l.el_std_p4_corr->At(goodEl[i]));
       for (unsigned int j=0; j<goodMu.size(); j++) {
-	if (l.el_std_charge[i] == l.mu_glo_charge[j]) {
+	if (l.el_std_charge[goodEl[i]] == l.mu_glo_charge[goodMu[j]]) {
 	  TLorentzVector* p2 = (TLorentzVector*)(l.mu_glo_p4_corr->At(goodMu[j]));
 	  float tempSumPt = p1->Pt() + p2->Pt();
 	  if (tempSumPt > sumPt) {
@@ -407,7 +407,7 @@ bool SSLeptonAnalysis::Analysis(LoopAll& l, Int_t jentry) {
     index2[pairs] = temp_index2;
     pairs++;
   }
-  
+
   if (pairs > 0) {
     Tree(l, pairs, type, mass, cat, index1, index2, weight, pu_weight);
     //for (int i=0; i<pairs; i++) 
@@ -615,11 +615,12 @@ void SSLeptonAnalysis::ResetAnalysis()
 void SSLeptonAnalysis::Tree(LoopAll& l, Int_t pairs, Int_t* type, Float_t* mass, Int_t* cat, Int_t* index1, Int_t* index2,
 			    Float_t weight, Float_t pu_weight) {
 
+
   l.FillTree("run", l.run);
   l.FillTree("lumis", l.lumis);
   l.FillTree("event", (double)l.event);
   l.FillTree("itype", (int)l.itype[l.current]);
-  l.FillTree("nvtx", (float)l.vtx_std_n);
+  l.FillTree("nvtx", (int)l.vtx_std_n);
   l.FillTree("rho", (float)l.rho_algo1);
   
   l.FillTree("pairs", pairs);
@@ -668,6 +669,14 @@ void SSLeptonAnalysis::Tree(LoopAll& l, Int_t pairs, Int_t* type, Float_t* mass,
 
     }
   }
+
+  l.FillTree("ch1_1", ch1_1, pairs);
+  l.FillTree("ch2_1", ch2_1, pairs);
+  l.FillTree("ch3_1", ch3_1, pairs);
+  l.FillTree("ch1_2", ch1_2, pairs);
+  l.FillTree("ch2_2", ch2_2, pairs);
+  l.FillTree("ch3_2", ch3_2, pairs);
+
   l.FillTree("id1",    id1, pairs);
   l.FillTree("iso1",   iso1, pairs);
   l.FillTree("id2",    id2, pairs);
@@ -676,7 +685,7 @@ void SSLeptonAnalysis::Tree(LoopAll& l, Int_t pairs, Int_t* type, Float_t* mass,
   l.FillTree("pu_weight", (float)pu_weight);
   l.FillTree("met", (float)l.met_pfmet);
   l.FillTree("metPhi", (float)l.met_phi_pfmet);
-  
+
   Bool_t jetid_flags[100];
   for(int ijet=0; ijet<l.jet_algoPF1_n; ++ijet ) {
     jetid_flags[ijet] = PileupJetIdentifier::passJetId((*l.jet_algoPF1_cutbased_wp_level_ext)[ijet][0], PileupJetIdentifier::kLoose);
@@ -708,21 +717,23 @@ void SSLeptonAnalysis::Tree(LoopAll& l, Int_t pairs, Int_t* type, Float_t* mass,
 
   l.FillTree("btag", btag, njets);
 
-  for (unsigned int i=0; i<l.jet_algoPF1_n; i++) 
-    btag2[i] = l.jet_algoPF1_csvBtag[i];
-
-  for (unsigned int i=0; i<l.jet_algoPF1_n-1; i++) {
-    for (unsigned int j=i+1; j<l.jet_algoPF1_n;j++) {
-      if (btag2[i] < btag2[j]) {
-	float temp = btag2[j];
-	btag2[j] = btag2[i];
-	btag2[i] = temp;
-      }
-    }
-  }
-
-  l.FillTree("btag2", btag2, 4);
-    
+  //for (unsigned int i=0; i<l.jet_algoPF1_n; i++) 
+  //  btag2[i] = l.jet_algoPF1_csvBtag[i];
+  //
+  //for (unsigned int i=0; i<l.jet_algoPF1_n-1; i++) {
+  //  for (unsigned int j=i+1; j<l.jet_algoPF1_n;j++) {
+  //    if (btag2[i] < btag2[j]) {
+  //	float temp = btag2[j];
+  //	btag2[j] = btag2[i];
+  //	btag2[i] = temp;
+  //    }
+  //  }
+  //}
+  //
+  //int nbtags = std::min(4, l.jet_algoPF1_n);
+  //std::cout << nbtags <<std::endl;
+  //l.FillTree("nbtags", nbtags);
+  //l.FillTree("btag2", btag2, nbtags);
 }
 
 bool SSLeptonAnalysis::checkEventHLT(LoopAll& l, std::vector<std::string> paths) {
