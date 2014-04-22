@@ -1,44 +1,38 @@
-intL=19730 histfile=out4.root output=schifo.root 
+intL=19730 histfile=out.root output=schifo.root 
 
-#typ=1   ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/DY_SS		 kfac=0.382 xsec=3532.8     Nam=DYSS		      
-#typ=2   ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/DYlowMass	         kfac=0.461 xsec=3532.8     Nam=DYlowMass	      
-#typ=10  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/TTJets	         kfac=0.679 xsec=225.2      Nam=TTJets	      
-#typ=11  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/TTZJets	         kfac=0.772 xsec=0.2057     Nam=TTZJets	      
-#typ=12  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/TTWJets	         kfac=0.773 xsec=0.232      Nam=TTWJets	      
-#typ=13  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/TTGJets	         kfac=0.707 xsec=2.166      Nam=TTGJets	      
-#typ=14  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/TTWWJets	         kfac=0.851 xsec=0.002037   Nam=TTWWJets	      
-#typ=15  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/TBZToLL	         kfac=0.799 xsec=0.0114     Nam=TBZToLL	      
-#       
-#typ=20  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/ZZZNoGstarJets       kfac=0.530 xsec=0.005527   Nam=ZZZNoGstarJets      
-#typ=21  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/ZZJetsTo4L	         kfac=0.725 xsec=0.1769     Nam=ZZJetsTo4L	      
-#
-#typ=30  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WZJetsTo3LNu	 kfac=0.656 xsec=1.0575     Nam=WZJetsTo3LNu	      
-#
-#
-#
-#
-#
-#
-typ=31  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WWGJets	         kfac=0.443 xsec=0.528      Nam=WWGJets	      
-typ=32  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WWZNoGstarJets       kfac=0.584 xsec=0.05795    Nam=WWZNoGstarJets      
-#typ=33  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WZZNoGstarJets       kfac=0.559 xsec=0.01968    Nam=WZZNoGstarJets      
-#typ=34  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WpWpqq	         kfac=0.541 xsec=0.2482     Nam=WpWpqq	      
-#typ=35  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WmWmqq	         kfac=0.537 xsec=0.08888    Nam=WmWmqq	      
-###typ=36  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WW_DoubleScattering  kfac=1.0   xsec=0.5879     Nam=WW_DoubleScattering 
-#typ=37  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WGstarToLNu2Mu       kfac=0.629 xsec=1.914      Nam=WGstarToLNu2Mu      
-#typ=38  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WGstarToLNu2Tau      kfac=0.359 xsec=0.336      Nam=WGstarToLNu2Tau     
-typ=39  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WWWJets	         kfac=0.574 xsec=0.08058    Nam=WWWJets	             
+typ=1   ind=1 lum=1.0e10 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/DY_SS		 kfac=1.0 xsec=3532.8     Nam=DYSS		      
+typ=2   ind=1 lum=1.0e10  scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/DYlowMass	         kfac=1.0 xsec=3532.8     Nam=DYlowMass	      
+typ=10  ind=1 lum=1.0e10  scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/TTJets	         kfac=1.0 xsec=225.2      Nam=TTJets	      
+typ=11  ind=1 lum=1.0e10  scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/TTZJets	         kfac=1.0 xsec=0.2057     Nam=TTZJets	      
+typ=12  ind=1 lum=1.0e10  scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/TTWJets	         kfac=1.0 xsec=0.232      Nam=TTWJets	      
+typ=13  ind=1 lum=1.0e10  scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/TTGJets	         kfac=1.0 xsec=2.166      Nam=TTGJets	      
+typ=14  ind=1 lum=1.0e10  scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/TTWWJets	         kfac=1.0 xsec=0.002037   Nam=TTWWJets	      
+typ=15  ind=1 lum=1.0e10  scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/TBZToLL	         kfac=1.0 xsec=0.0114     Nam=TBZToLL	      
       
-#typ=40  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WH_ZH_TTH_HToWW      kfac=0.533 xsec=0.2604     Nam=WH_ZH_TTH_HToWW     
-#typ=41  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WH_ZH_TTH_HToZZ      kfac=0.505 xsec=0.0320     Nam=WH_ZH_TTH_HToZZ     
-#typ=42  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WH_ZH_TTH_HToTauTau  kfac=0.596 xsec=0.0177     Nam=WH_ZH_TTH_HToTauTau 
-#      
-#typ=50  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WJetsLNu200_250      kfac=0.480 xsec=90.27      Nam=WJetsLNu200_250     
-#typ=51  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WJetsLNu250_300      kfac=0.510 xsec=48.01      Nam=WJetsLNu250_300     
-#typ=52  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WJetsLNu300_400      kfac=0.539 xsec=38.3       Nam=WJetsLNu300_400     
-#typ=53  ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WJetsLNu400_Inf      kfac=0.594 xsec=25.22      Nam=WJetsLNu400_Inf     
+typ=20  ind=1 lum=1.0e10  scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/ZZZNoGstarJets       kfac=1.0 xsec=0.005527   Nam=ZZZNoGstarJets      
+typ=21  ind=1 lum=1.0e10  scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/ZZJetsTo4L	         kfac=1.0 xsec=0.1769     Nam=ZZJetsTo4L	      
 
-#typ=-100 ind=1 lum=1.0e10 kfac=1.0 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/HH                   kfac=1.0   xsec=2.472      Nam=HH    
+typ=30  ind=1 lum=1.0e10  scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WZJetsTo3LNu	 kfac=1.0 xsec=1.0575     Nam=WZJetsTo3LNu	      
+typ=31  ind=1 lum=1.0e10  scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WWGJets	         kfac=1.0 xsec=0.528      Nam=WWGJets	      
+typ=32  ind=1 lum=1.0e10  scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WWZNoGstarJets       kfac=1.0 xsec=0.05795    Nam=WWZNoGstarJets      
+typ=33  ind=1 lum=1.0e10  scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WZZNoGstarJets       kfac=1.0 xsec=0.01968    Nam=WZZNoGstarJets      
+typ=34  ind=1 lum=1.0e10  scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WpWpqq	         kfac=1.0 xsec=0.2482     Nam=WpWpqq	      
+typ=35  ind=1 lum=1.0e10  scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WmWmqq	         kfac=1.0 xsec=0.08888    Nam=WmWmqq	      
+##typ=36  ind=1 lum=1.0e10 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WW_DoubleScattering   kfac=1.0   xsec=0.5879     Nam=WW_DoubleScattering 
+typ=37  ind=1 lum=1.0e10 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WGstarToLNu2Mu     	 kfac=1.0 xsec=1.914      Nam=WGstarToLNu2Mu      
+typ=38  ind=1 lum=1.0e10 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WGstarToLNu2Tau       kfac=1.0 xsec=0.336      Nam=WGstarToLNu2Tau     
+typ=39  ind=1 lum=1.0e10 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WWWJets	         kfac=1.0 xsec=0.08058    Nam=WWWJets	             
+      
+typ=40  ind=1 lum=1.0e10 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WH_ZH_TTH_HToWW       kfac=1.0 xsec=0.2604     Nam=WH_ZH_TTH_HToWW     
+typ=41  ind=1 lum=1.0e10 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WH_ZH_TTH_HToZZ       kfac=1.0 xsec=0.0320     Nam=WH_ZH_TTH_HToZZ     
+typ=42  ind=1 lum=1.0e10 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WH_ZH_TTH_HToTauTau   kfac=1.0 xsec=0.0177     Nam=WH_ZH_TTH_HToTauTau 
+      
+typ=50  ind=1 lum=1.0e10 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WJetsLNu200_250       kfac=1.0 xsec=90.27      Nam=WJetsLNu200_250     
+typ=51  ind=1 lum=1.0e10 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WJetsLNu250_300       kfac=1.0 xsec=48.01      Nam=WJetsLNu250_300     
+typ=52  ind=1 lum=1.0e10 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WJetsLNu300_400       kfac=1.0 xsec=38.3       Nam=WJetsLNu300_400     
+typ=53  ind=1 lum=1.0e10 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/WJetsLNu400_Inf       kfac=1.0 xsec=25.22      Nam=WJetsLNu400_Inf     
+
+typ=-100 ind=1 lum=1.0e10 scal=1. Dir=/hadoop/cms/store/user/matteo/reduced/HH                   kfac=1.0   xsec=532      Nam=HH    
 
 inputBranches ssleptonanalysis/reduction_output.dat
 inputBranches ssleptonanalysis/analysis_input.dat

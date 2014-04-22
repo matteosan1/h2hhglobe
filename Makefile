@@ -61,7 +61,7 @@ CXXFLAGS+=-I$(ROOFIT_BASE)/include -I$(CMSSW_BASE)/src  -I$(CMSSW_RELEASE_BASE)/
 CXXFLAGS+= $(patsubst %, -I%, $(shell echo ${CMSSW_FWLITE_INCLUDE_PATH} | tr ':' '\n'))
 CXXFLAGS+=-I$(shell pwd) -g
 ifneq (,$(findstring CMSSW_6,$(CMSSW_VERSION)))
-CXXFLAGS += -D__slc5_amd64_gcc472__
+CXXFLAGS += -D__slc5_amd64_gcc4A72__
 endif
 
 ##

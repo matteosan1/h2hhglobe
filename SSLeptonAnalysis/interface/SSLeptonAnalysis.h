@@ -31,8 +31,9 @@ class SSLeptonAnalysis : public StatAnalysis {
   virtual bool SelectEvents(LoopAll&, int);
   virtual bool Analysis(LoopAll&, Int_t);
 
+  bool removeZLeptons(LoopAll& l, int l1, bool isMuon);
   bool ElectronMVACuts(LoopAll& l, int i);
-  float ElectronIsolation(LoopAll& l, int i, float e);
+  float ElectronIsolation(LoopAll& l, int i, float eta, float pt);
   bool checkEventHLT(LoopAll& l, std::vector<std::string> paths);
   void Tree(LoopAll& l, Int_t pairs, Int_t* type, Float_t* mass, Int_t* cat, Int_t* id1, Int_t* id2, Float_t weight, Float_t pu_weight);
   void FillRooContainer(LoopAll& l, int cur_type, float mass, int category, float weight);
@@ -54,6 +55,7 @@ class SSLeptonAnalysis : public StatAnalysis {
   bool doBlinding;
   bool dataIs2011;
   float eleIDCut;
+  float eleIsoCut;
   bool muIDTight;
   std::string jetHandlerCfg;
   //JetHandler* jethandler_;

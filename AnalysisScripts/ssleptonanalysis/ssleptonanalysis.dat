@@ -5,7 +5,8 @@ puTarget=aux/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt.69400.obse
 
 minMassCut=8
 muIDTight=1
-eleIDCut=0.8
+eleIDCut=0.92
+eleIsoCut=0.1
 
 doBlinding=1
 bkgPolOrderByCat=6,6,6
