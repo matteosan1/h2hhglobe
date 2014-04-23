@@ -163,6 +163,7 @@ for z in xrange(entries):
             #hBtag[tree.type[pair]+processCat*3].Fill(tree.btag[1], tree.weight)
             wsProducer.fillDataset(tree.itype, tree.type[pair], tree.cat[pair], tree.mass[pair], tree.weight)
 
+wsProducer.finalize()
 wsProducer.saveWS()
 
 output = ROOT.TFile("sslept_output.root", "recreate")
