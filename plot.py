@@ -53,6 +53,7 @@ def histograms(cats):
 def makePlots(processCats, pairCats, isBlind):
     global hMET, hMass, hBtag
     input = ROOT.TFile("sslept_output.root")
+    assert input.IsOpen(),"could not open file " + input.GetName()
     for i in xrange(processCats):
         for j in xrange(pairCats):
             hMET.append(input.Get("hmet"+str(i)+"_typ"+str(j)))
@@ -125,6 +126,7 @@ wsProducer.prepareDataSets(3)
 histograms(18)
 
 file = ROOT.TFile("UCSDplotter/sslept_v3.root")
+assert file.IsOpen(),"could not open file " + file.GetName()
 tree = file.Get("opttree")
 tree.SetBranchStatus("*",0)
 tree.SetBranchStatus("itype",1)
@@ -161,6 +163,7 @@ for z in xrange(entries):
             #hBtag[tree.type[pair]+processCat*3].Fill(tree.btag[1], tree.weight)
             wsProducer.fillDataset(tree.itype, tree.type[pair], tree.cat[pair], tree.mass[pair], tree.weight)
 
+wsProducer.finalize()
 wsProducer.saveWS()
 
 output = ROOT.TFile("sslept_output.root", "recreate")
