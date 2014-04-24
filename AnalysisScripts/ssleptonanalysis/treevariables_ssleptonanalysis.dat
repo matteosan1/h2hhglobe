@@ -30,5 +30,6 @@ type=10 name=ch2_2  size=pairs
 type=10 name=ch3_2  size=pairs  
 type=10 name=type size=pairs
 type=12 name=btag size=njets
-type=12 name=btag2 size=4
+#type=0 name=nbtags 
+#type=12 name=btag2 size=nbtags
 

@@ -1,6 +1,5 @@
-import ROOT, sys
+import ROOT
 from optparse import OptionParser
-
 parser = OptionParser()
 parser.add_option("-i", "--input", default="", help="Input ROOT file")
 parser.add_option("-o", "--output", default="", help="Output ROOT file")
@@ -9,15 +8,36 @@ parser.add_option("-t", "--treename", default="opttree", help="Output tree name"
 parser.add_option("-r", "--remove", default="", help="List of tags to remove")
 (options, arg) = parser.parse_args()
 
-tags_to_remove = options.remove.split(",")
-print tags_to_remove
+def mergeOther(inputFile, listOfTrees):
+    global options
+    outFileName = options.output
+    
+    print "Adding ", listOfTrees[0]
+    firstTree = inputFile.Get(listOfTrees[0])
+    firstTree.SetBranchStatus('*',1)
+    
+    outFile = ROOT.TFile(outFileName, 'recreate')
+    outTree = firstTree.CloneTree()
+    outTree.SetName(options.treename)
+    
+    for elem in listOfTrees[1:]:
+        print "Adding ", elem
+        ttree = inputFile.Get(elem)
+        ttree.SetBranchStatus('*', 1)
+        outTree.CopyEntries(ttree, -1, "FAST")
+    
+    outFile.cd()
+    outTree.Write()
+    outFile.Close()
+
+tags_to_remove = []
+if (options.remove):
+    tags_to_remove = options.remove.split(",")
 dirname = options.dirname
 
-#tree = []
-list = ROOT.TList()
-firstName = ""
-
-f = ROOT.TFile(options.input)
+list = []
+f = ROOT.TFile(options.input, "read")
+ROOT.gROOT.cd()
 mydir = 0
 
 if(dirname != ""):
@@ -44,42 +64,11 @@ for k in keys:
     if (className == "TTree"):
         if ((name == "lumi") or (name == "plotvariables") or (name == "inputfiles")):
             continue
-        print "Adding ", name
-
         if (dirname == ""):
-            list.Add(f.Get(name))
+            list.append(name)
         else:
-            list.Add(mydir.Get(name))
+            list.Add(name)
 
-if (list.GetEntries() > 0):
-    out = ROOT.TFile(options.output, "recreate")
-    out.cd()
-    opttree = ROOT.TTree.MergeTrees(list)
-    opttree.SetName(options.treename)
-    opttree.Write()
-    out.Close()
-    f.Close()
-
-#  
-#
-#  out = new TFile(outfilename, "update");
-#  TIter nextKey(out->GetListOfKeys());
-#  TKey* key;
-#  
-#  while (key = (TKey*)nextKey()) {
-#    TString name(key->GetName());
-#    TString className(key->GetClassName());
-#    if (className.CompareTo("TTree") == 0) {
-#      if (name.CompareTo(treename) != 0) {
-#	std::cout << "Cleaning " << key->GetName() << std::endl;
-#	key->Delete();
-#      } else {
-#	key->SetTitle("Opttree");
-#      }
-#    }
-#  }
-#
-#  out->Close();
-#  
-#  return 0;
-#}
+mergeOther(f, list)
+f.cd()
+f.Close()

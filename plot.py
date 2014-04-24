@@ -6,7 +6,8 @@ from optparse import OptionParser
 hMET  = []
 hMass = []
 hBtag = []
-colors = (ROOT.kBlack, ROOT.kRed, ROOT.kBlue-10, ROOT.kBlue, ROOT.kViolet, ROOT.kGreen, ROOT.kYellow, ROOT.kOrange)
+colors = (ROOT.kBlack, ROOT.kRed, ROOT.kBlue-10, ROOT.kBlue, ROOT.kViolet, ROOT.kGreen, ROOT.kOrange,
+          ROOT.kYellow,ROOT.kYellow,ROOT.kYellow,ROOT.kYellow,ROOT.kYellow,ROOT.kYellow,ROOT.kYellow,ROOT.kYellow,ROOT.kYellow,ROOT.kYellow,ROOT.kYellow,ROOT.kYellow)
 
 def processCats(itype):
     Ztypes     = [1, 2]
@@ -35,10 +36,10 @@ def processCats(itype):
         return 5
 
     if (itype in Wtypes):
-        return 6
+        return 7+itype-30
 
     if (itype in WJetstypes):
-        return 7
+        return 6
     
 def histograms(cats):
     global hMET, hMass, hBtag
@@ -67,11 +68,12 @@ def makePlots(processCats, pairCats, isBlind):
     stacks = []
     for j in xrange(pairCats):
         canvases.append(ROOT.TCanvas("c"+str(j), "c"+str(j)))
-        hMass[j+3].Scale(10)
+        canvases[-1].SetLogy(1)
         hMass[j+3].SetFillStyle(0)
         hMass[j+3].SetLineWidth(2)
         hMass[j+3].SetLineColor(colors[1])        
         hMass[j+3].Draw("HIST")
+        hMass[j+3].GetYaxis().SetRangeUser(1, 1e4)
 
         stacks.append(ROOT.THStack("s"+str(j), "s"+str(j)))
         for i in type_range:
@@ -87,7 +89,7 @@ def makePlots(processCats, pairCats, isBlind):
             stacks[-1].Add(hMET[j+i*3])
 
         stacks[-1].Draw()
-        hMET[j+3].Scale(10)
+        hMET[j+3].Scale(1./250.);
         hMET[j+3].SetFillStyle(0)
         hMET[j+3].SetLineWidth(2)
         hMET[j+3].SetLineColor(colors[1])        
@@ -95,17 +97,18 @@ def makePlots(processCats, pairCats, isBlind):
         canvases[-1].SaveAs("met"+str(j)+".png")
 
         canvases.append(ROOT.TCanvas("cbtag"+str(j), "cbtag"+str(j)))
+        canvases[-1].SetLogy(1)
+        hBtag[j+3].SetFillStyle(0)
+        hBtag[j+3].SetLineWidth(2)
+        hBtag[j+3].SetLineColor(colors[1])        
+        hBtag[j+3].Draw("HIST")
+        hBtag[j+3].GetYaxis().SetRangeUser(1, 1e4)
         stacks.append(ROOT.THStack("sbtag"+str(j), "sbtag"+str(j)))
         for i in type_range:
             stacks[-1].Add(hBtag[j+i*3])
 
-        stacks[-1].Draw()
-        hBtag[j+3].Scale(10)
-        hBtag[j+3].SetFillStyle(0)
-        hBtag[j+3].SetLineWidth(2)
-        hBtag[j+3].SetLineColor(colors[1])        
-        hBtag[j+3].Draw("HISTSAME")
-        #canvases[-1].SaveAs("btag"+str(j)+".png")
+        stacks[-1].Draw("SAME")
+        canvases[-1].SaveAs("btag"+str(j)+".png")
     input.Close()
     
 parser = OptionParser()
@@ -114,14 +117,14 @@ parser.add_option("-b", "--blind", default=False, action="store_true", help="Do 
 (options, arg) = parser.parse_args()
 
 if (options.plot):
-    makePlots(8, 3, options.blind)
+    makePlots(18, 3, options.blind)
     sys.exit()
 
 wsProducer = WSProducer()
 wsProducer.prepareDataSets(3)
-histograms(8)
+histograms(18)
 
-file = ROOT.TFile("UCSDplotter/sslep_v4.root")
+file = ROOT.TFile("UCSDplotter/sslept_v3.root")
 tree = file.Get("opttree")
 tree.SetBranchStatus("*",0)
 tree.SetBranchStatus("itype",1)
@@ -138,24 +141,24 @@ entries = tree.GetEntries()
 for z in xrange(entries):
     tree.GetEntry(z)
     processCat = processCats(tree.itype)
-    if (tree.njets < 2):
-        continue
+    #if (tree.njets < 2):
+    #    continue
     pairs = tree.pairs
     for pair in xrange(pairs):
         hMET[tree.type[pair]+processCat*3].Fill(tree.met, tree.weight)
     
-        if (tree.type[pair]==0 and tree.met < 50.):
+        if (tree.type[pair]==0 and tree.met < 40.):
             continue
-        if (tree.type[pair]>0 and tree.met < 50.):
+        if (tree.type[pair]>0 and tree.met < 40.):
             continue 
 
-        if (tree.btag[0] > 0.6 or tree.btag[1] > 0.6):
-            continue
+        #if (tree.btag[0] > 0.6 or tree.btag[1] > 0.6):
+        #    continue
 
         if (tree.mass[pair] > 8.):
             hMass[tree.type[pair]+processCat*3].Fill(tree.mass[pair], tree.weight)
-            hBtag[tree.type[pair]+processCat*3].Fill(tree.btag[0], tree.weight)
-            hBtag[tree.type[pair]+processCat*3].Fill(tree.btag[1], tree.weight)
+            #hBtag[tree.type[pair]+processCat*3].Fill(tree.btag[0], tree.weight)
+            #hBtag[tree.type[pair]+processCat*3].Fill(tree.btag[1], tree.weight)
             wsProducer.fillDataset(tree.itype, tree.type[pair], tree.cat[pair], tree.mass[pair], tree.weight)
 
 wsProducer.saveWS()

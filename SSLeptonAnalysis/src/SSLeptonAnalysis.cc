@@ -276,6 +276,39 @@ int SSLeptonAnalysis::categories(TLorentzVector* p1, TLorentzVector* p2, bool mi
   }
 }
 
+bool SSLeptonAnalysis::removeZLeptons(LoopAll& l, int l1, bool isMuon) {
+
+  if (isMuon) {
+    TLorentzVector* p1 = (TLorentzVector*)(l.mu_glo_p4_corr->At(l1));
+    for (unsigned int i=0; i<l.mu_glo_n; i++) {
+      if (i == l1)
+	continue;
+      if (l.mu_glo_charge[l1] != l.mu_glo_charge[i]) {
+	TLorentzVector* p2 = (TLorentzVector*)(l.mu_glo_p4_corr->At(i));
+	float temp_mass = (*p1+*p2).M();
+	if (temp_mass > 91.186-15. or temp_mass < 91.186+15)
+	  return true;
+      }
+    }
+    return false;
+  } else {
+    TLorentzVector* p1 = (TLorentzVector*)(l.el_std_p4_corr->At(l1));
+    for (unsigned int i=0; i<l.el_std_n; i++) {
+      if (i == l1)
+	continue;
+      if (l.el_std_charge[l1] != l.el_std_charge[i]) {
+	TLorentzVector* p2 = (TLorentzVector*)(l.el_std_p4_corr->At(i));
+	float temp_mass = (*p1+*p2).M();
+	if (temp_mass > 91.186-15. or temp_mass < 91.186+15)
+	  return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+
 // ----------------------------------------------------------------------------------------------------
 bool SSLeptonAnalysis::Analysis(LoopAll& l, Int_t jentry) {
 
@@ -295,7 +328,7 @@ bool SSLeptonAnalysis::Analysis(LoopAll& l, Int_t jentry) {
   for (int i=0; i<l.el_std_n; i++) {
     TLorentzVector* p4 = (TLorentzVector*)(l.el_std_p4_corr->At(i));
     
-    if (ElectronMVACuts(l, i) and p4->Et() > 20.)
+    if (ElectronMVACuts(l, i) and p4->Et() > 20. and !removeZLeptons(l, i, false))
       goodEl.push_back(i);
   }
 
@@ -303,7 +336,8 @@ bool SSLeptonAnalysis::Analysis(LoopAll& l, Int_t jentry) {
     TLorentzVector* p4 = (TLorentzVector*)(l.mu_glo_p4_corr->At(i));
     if ((muIDTight and l.mu_glo_id_tight[i] == 1 and p4->Pt() > 20.) or
 	(!muIDTight and l.mu_glo_id_loose[i] == 1 and p4->Pt() > 20.))
-      goodMu.push_back(i);
+      if (!removeZLeptons(l, i, true))
+	goodMu.push_back(i);
   }
 
   Float_t mass[100];
@@ -320,7 +354,7 @@ bool SSLeptonAnalysis::Analysis(LoopAll& l, Int_t jentry) {
     for (unsigned int i=0; i<goodMu.size()-1; i++) {
       TLorentzVector* p1 = (TLorentzVector*)(l.mu_glo_p4_corr->At(goodMu[i]));
       for (unsigned int j=i+1; j<goodMu.size(); j++) {
-	if (l.mu_glo_charge[i] == l.mu_glo_charge[j]) {
+	if (l.mu_glo_charge[goodMu[i]] == l.mu_glo_charge[goodMu[j]]) {
 	  TLorentzVector* p2 = (TLorentzVector*)(l.mu_glo_p4_corr->At(goodMu[j]));
 	  
 	  float tempSumPt = p1->Pt() + p2->Pt();
@@ -351,7 +385,7 @@ bool SSLeptonAnalysis::Analysis(LoopAll& l, Int_t jentry) {
     for (unsigned int i=0; i<goodEl.size()-1; i++) {
       TLorentzVector* p1 = (TLorentzVector*)(l.el_std_p4_corr->At(goodEl[i]));
       for (unsigned int j=i+1; j<goodEl.size(); j++) {
-	if (l.el_std_charge[i] == l.el_std_charge[j]) {
+	if (l.el_std_charge[goodEl[i]] == l.el_std_charge[goodEl[j]]) {
 	  TLorentzVector* p2 = (TLorentzVector*)(l.el_std_p4_corr->At(goodEl[j]));
 	  float tempSumPt = p1->Pt() + p2->Pt();
 	  if (tempSumPt > sumPt) {
@@ -382,7 +416,7 @@ bool SSLeptonAnalysis::Analysis(LoopAll& l, Int_t jentry) {
     for (unsigned int i=0; i<goodEl.size(); i++) {
       TLorentzVector* p1 = (TLorentzVector*)(l.el_std_p4_corr->At(goodEl[i]));
       for (unsigned int j=0; j<goodMu.size(); j++) {
-	if (l.el_std_charge[i] == l.mu_glo_charge[j]) {
+	if (l.el_std_charge[goodEl[i]] == l.mu_glo_charge[goodMu[j]]) {
 	  TLorentzVector* p2 = (TLorentzVector*)(l.mu_glo_p4_corr->At(goodMu[j]));
 	  float tempSumPt = p1->Pt() + p2->Pt();
 	  if (tempSumPt > sumPt) {
@@ -407,7 +441,7 @@ bool SSLeptonAnalysis::Analysis(LoopAll& l, Int_t jentry) {
     index2[pairs] = temp_index2;
     pairs++;
   }
-  
+
   if (pairs > 0) {
     Tree(l, pairs, type, mass, cat, index1, index2, weight, pu_weight);
     //for (int i=0; i<pairs; i++) 
@@ -615,11 +649,12 @@ void SSLeptonAnalysis::ResetAnalysis()
 void SSLeptonAnalysis::Tree(LoopAll& l, Int_t pairs, Int_t* type, Float_t* mass, Int_t* cat, Int_t* index1, Int_t* index2,
 			    Float_t weight, Float_t pu_weight) {
 
+
   l.FillTree("run", l.run);
   l.FillTree("lumis", l.lumis);
   l.FillTree("event", (double)l.event);
   l.FillTree("itype", (int)l.itype[l.current]);
-  l.FillTree("nvtx", (float)l.vtx_std_n);
+  l.FillTree("nvtx", (int)l.vtx_std_n);
   l.FillTree("rho", (float)l.rho_algo1);
   
   l.FillTree("pairs", pairs);
@@ -646,8 +681,8 @@ void SSLeptonAnalysis::Tree(LoopAll& l, Int_t pairs, Int_t* type, Float_t* mass,
     } else if (type[i] == 1) {
       id1[i]  = l.el_std_mva_trig[index1[i]];
       id2[i]  = l.el_std_mva_trig[index2[i]];
-      iso1[i] = ElectronIsolation(l, index1[i], fabs(((TLorentzVector*)l.el_std_sc->At(index1[i]))->Eta()));
-      iso2[i] = ElectronIsolation(l, index2[i], fabs(((TLorentzVector*)l.el_std_sc->At(index2[i]))->Eta()));
+      iso1[i] = ElectronIsolation(l, index1[i], fabs(((TLorentzVector*)l.el_std_sc->At(index1[i]))->Eta()), ((TLorentzVector*) l.el_std_p4_corr->At(index1[i]))->Pt());
+      iso2[i] = ElectronIsolation(l, index2[i], fabs(((TLorentzVector*)l.el_std_sc->At(index2[i]))->Eta()), ((TLorentzVector*) l.el_std_p4_corr->At(index2[i]))->Pt());
       ch1_1[i] = l.el_std_charge[index1[i]];
       ch2_1[i] = l.el_std_ch_gsf[index1[i]];
       ch3_1[i] = l.el_std_ch_scpix[index1[i]];
@@ -657,7 +692,7 @@ void SSLeptonAnalysis::Tree(LoopAll& l, Int_t pairs, Int_t* type, Float_t* mass,
     } else {
       id1[i]  = l.el_std_mva_trig[index1[i]];
       id2[i] = 9999;
-      iso1[i] = ElectronIsolation(l, index1[i], fabs(((TLorentzVector*)l.el_std_sc->At(index1[i]))->Eta()));
+      iso1[i] = ElectronIsolation(l, index1[i], fabs(((TLorentzVector*)l.el_std_sc->At(index1[i]))->Eta()), ((TLorentzVector*) l.el_std_p4_corr->At(index1[i]))->Pt());
       iso2[i] = 9999;
       ch1_1[i] = l.el_std_charge[index1[i]];
       ch2_1[i] = l.el_std_ch_gsf[index1[i]];
@@ -668,6 +703,14 @@ void SSLeptonAnalysis::Tree(LoopAll& l, Int_t pairs, Int_t* type, Float_t* mass,
 
     }
   }
+
+  l.FillTree("ch1_1", ch1_1, pairs);
+  l.FillTree("ch2_1", ch2_1, pairs);
+  l.FillTree("ch3_1", ch3_1, pairs);
+  l.FillTree("ch1_2", ch1_2, pairs);
+  l.FillTree("ch2_2", ch2_2, pairs);
+  l.FillTree("ch3_2", ch3_2, pairs);
+
   l.FillTree("id1",    id1, pairs);
   l.FillTree("iso1",   iso1, pairs);
   l.FillTree("id2",    id2, pairs);
@@ -676,7 +719,7 @@ void SSLeptonAnalysis::Tree(LoopAll& l, Int_t pairs, Int_t* type, Float_t* mass,
   l.FillTree("pu_weight", (float)pu_weight);
   l.FillTree("met", (float)l.met_pfmet);
   l.FillTree("metPhi", (float)l.met_phi_pfmet);
-  
+
   Bool_t jetid_flags[100];
   for(int ijet=0; ijet<l.jet_algoPF1_n; ++ijet ) {
     jetid_flags[ijet] = PileupJetIdentifier::passJetId((*l.jet_algoPF1_cutbased_wp_level_ext)[ijet][0], PileupJetIdentifier::kLoose);
@@ -708,21 +751,23 @@ void SSLeptonAnalysis::Tree(LoopAll& l, Int_t pairs, Int_t* type, Float_t* mass,
 
   l.FillTree("btag", btag, njets);
 
-  for (unsigned int i=0; i<l.jet_algoPF1_n; i++) 
-    btag2[i] = l.jet_algoPF1_csvBtag[i];
-
-  for (unsigned int i=0; i<l.jet_algoPF1_n-1; i++) {
-    for (unsigned int j=i+1; j<l.jet_algoPF1_n;j++) {
-      if (btag2[i] < btag2[j]) {
-	float temp = btag2[j];
-	btag2[j] = btag2[i];
-	btag2[i] = temp;
-      }
-    }
-  }
-
-  l.FillTree("btag2", btag2, 4);
-    
+  //for (unsigned int i=0; i<l.jet_algoPF1_n; i++) 
+  //  btag2[i] = l.jet_algoPF1_csvBtag[i];
+  //
+  //for (unsigned int i=0; i<l.jet_algoPF1_n-1; i++) {
+  //  for (unsigned int j=i+1; j<l.jet_algoPF1_n;j++) {
+  //    if (btag2[i] < btag2[j]) {
+  //	float temp = btag2[j];
+  //	btag2[j] = btag2[i];
+  //	btag2[i] = temp;
+  //    }
+  //  }
+  //}
+  //
+  //int nbtags = std::min(4, l.jet_algoPF1_n);
+  //std::cout << nbtags <<std::endl;
+  //l.FillTree("nbtags", nbtags);
+  //l.FillTree("btag2", btag2, nbtags);
 }
 
 bool SSLeptonAnalysis::checkEventHLT(LoopAll& l, std::vector<std::string> paths) {
@@ -821,7 +866,7 @@ void SSLeptonAnalysis::MetCorrections2012_Simple(LoopAll& l,TLorentzVector lead_
      }
 }
 
-float SSLeptonAnalysis::ElectronIsolation(LoopAll& l, int el_ind, float eta) {
+float SSLeptonAnalysis::ElectronIsolation(LoopAll& l, int el_ind, float eta, float pT) {
 
   if(eta>2.5 || (eta>1.442 && eta<1.566)) 
     return 9999.;
@@ -837,7 +882,7 @@ float SSLeptonAnalysis::ElectronIsolation(LoopAll& l, int el_ind, float eta) {
   if(eta>=2.4)                  Aeff=0.23;
   float thisiso=l.el_std_pfiso_charged[el_ind]+std::max(l.el_std_pfiso_neutral[el_ind]+l.el_std_pfiso_photon[el_ind]-l.rho_algo1*Aeff,0.);
     
-  return thisiso;
+  return thisiso/pT;
 }
 
 bool SSLeptonAnalysis::ElectronMVACuts(LoopAll& l, int el_ind) {
@@ -849,13 +894,13 @@ bool SSLeptonAnalysis::ElectronMVACuts(LoopAll& l, int el_ind) {
   if(l.el_std_mva_trig[el_ind] < eleIDCut) 
     return pass;
 
-  TLorentzVector* thisel = (TLorentzVector*) l.el_std_p4->At(el_ind);
+  TLorentzVector* thisel = (TLorentzVector*) l.el_std_p4_corr->At(el_ind);
   TLorentzVector* thissc = (TLorentzVector*) l.el_std_sc->At(el_ind);
   float thiseta = fabs(thissc->Eta());
   float thispt = thisel->Pt();
   
-  float thisiso = ElectronIsolation(l, el_ind, thiseta);
-  if (thisiso/thispt > 0.15)
+  float relIso = ElectronIsolation(l, el_ind, thiseta, thispt);
+  if (relIso > eleIsoCut)
     return pass;
   
   if(l.el_std_hp_expin[el_ind]>1) 
