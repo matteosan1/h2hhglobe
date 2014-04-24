@@ -5,9 +5,11 @@ where:
         <branch_type> = 0 for branches to be always read
         <branch_type> = 1 for branches to be read only for MC
 ->
+tk_charge
+el_std_tkind
+
 hlt_path_names_HLT
 hlt_bit
-
 
 mu_glo_n
 mu_glo_p4

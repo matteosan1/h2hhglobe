@@ -1,3 +1,4 @@
+Int_t el_std_ch_ctf[MAX_ELECTRONS];
 Int_t mu_glo_id_tight[MAX_MUONS];
 Int_t mu_glo_id_loose[MAX_MUONS];
 Int_t mc_n;

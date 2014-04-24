@@ -1,4 +1,4 @@
-
+void SetBranchAddress_el_std_ch_ctf(TTree * tree) { tree->SetBranchAddress("el_std_ch_ctf", &el_std_ch_ctf, &b_el_std_ch_ctf); }; 
 void SetBranchAddress_mc_n(TTree * tree) { tree->SetBranchAddress("mc_n", &mc_n, &b_mc_n); }; 
 void SetBranchAddress_mc_et(TTree * tree) { tree->SetBranchAddress("mc_et", &mc_et, &b_mc_et); }; 
 void SetBranchAddress_mc_eta(TTree * tree) { tree->SetBranchAddress("mc_eta", &mc_eta, &b_mc_eta); }; 

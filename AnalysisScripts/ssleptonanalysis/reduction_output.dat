@@ -45,7 +45,7 @@ el_std_ch_gsf
 el_std_ch_scpix
 el_std_mva_trig
 el_std_mva_nontrig
-#el_std_conv
+el_std_conv
 
 mu_glo_n
 mu_glo_p4

@@ -223,6 +223,7 @@ if __name__ == "__main__":
         out2 = open(options.tag+"/"+txtfilename, "w")
         if (options.eth or options.ucsd):
             out2.write("#! /bin/bash\n")
+            out2.write("eos mkdir /store/caf/user/sani/"+options.tag+"\n")
             out2.write("mkdir /tmp/sani\n")
             out2.write("rsync -avP -e \'ssh -o StrictHostKeyChecking=no\' "+ os.getenv("HOSTNAME") + ":" + os.getenv("X509_USER_PROXY")+ " " +os.getenv("X509_USER_PROXY")+"\n")
             #out2.write("rsync -avP "+ os.getenv("HOSTNAME") + ":" + os.getenv("X509_USER_PROXY")+ " " +os.getenv("X509_USER_PROXY")+"\n")
@@ -237,7 +238,7 @@ if __name__ == "__main__":
             out2.write("let \"number %= $RANGE\"\n")
             out2.write("sleep $number\n")
             outputfile = outputfilename + "_job" + str(numberofjobs) +".root"
-            out2.write("xrdcp --retry 60 -f /tmp/sani/" + outputfile + " root://eoscms//eos/cms/store/caf/user/sani/" + options.tag + "/"+outputfile+"\n")
+            out2.write("xrdcp -f /tmp/sani/" + outputfile + " root://eoscms//eos/cms/store/caf/user/sani/" + options.tag + "/"+outputfile+"\n")
             out2.write("if [ \"$?\" -eq 0 ]; then\n")
             out2.write("  touch "+txtfilename+".done\n")
             out2.write("else\n")

@@ -493,6 +493,10 @@ void SSLeptonAnalysis::GetBranches(TTree *t, std::set<TBranch *>& s )
 // ----------------------------------------------------------------------------------------------------
 void SSLeptonAnalysis::FillReductionVariables(LoopAll& l, int jentry) {
 
+  for (int i=0; i<l.el_std_n; i++) {
+    l.el_std_ch_ctf[i] = l.tk_charge[l.el_std_tkind[i]];
+  }
+
   l.mu_glo_p4_corr->Clear();
   
   for (int i=0; i<l.mu_glo_n; i++) {
@@ -636,6 +640,7 @@ void SSLeptonAnalysis::ReducedOutputTree(LoopAll &l, TTree * outputTree) {
   l.Branch_mc_et(outputTree);
   l.Branch_mc_eta(outputTree);
   l.Branch_mc_phi(outputTree);
+  l.Branch_el_std_ch_ctf(outputTree);
   //l.Branch_fsr_et(outputTree);
   //l.Branch_fsr_eta(outputTree);
   //l.Branch_fsr_phi(outputTree);
