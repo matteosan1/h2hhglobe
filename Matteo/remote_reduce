@@ -100,6 +100,8 @@ if __name__ == "__main__":
     totalfilesize = 0
     file_names = []
     for l in temp:
+        if (".log" in l):
+            continue
         line = l.split()
         if (len(line) > 0):
             if (options.eth):
