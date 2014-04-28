@@ -238,16 +238,17 @@ if __name__ == "__main__":
             out2.write("RANGE=500\n")
             out2.write("number=$RANDOM\n")
             out2.write("let \"number %= $RANGE\"\n")
-            out2.write("sleep $number\n")
+            #out2.write("sleep $number\n")
             outputfile = outputfilename + "_job" + str(numberofjobs) +".root"
             out2.write("xrdcp -f /tmp/sani/" + outputfile + " root://eoscms//eos/cms/store/caf/user/sani/" + options.tag + "/"+outputfile+"\n")
+            out2.write("scp /tmp/sani/" + outputfile + " lxplus422:/tmp/sani/"+outputfile+"\n")
             out2.write("if [ \"$?\" -eq 0 ]; then\n")
             out2.write("  touch "+txtfilename+".done\n")
             out2.write("else\n")
             out2.write("  touch "+txtfilename+".fail\n")
             out2.write("fi\n")
-            out2.write("rm " + outputfile + "\n")
-            out2.write("rm "+os.getenv("X509_USER_PROXY"))
+            #out2.write("rm " + outputfile + "\n")
+            #out2.write("rm "+os.getenv("X509_USER_PROXY"))
             out2.close()
             os.system("chmod 775 "+options.tag+"/"+txtfilename)
         else:
@@ -262,10 +263,11 @@ if __name__ == "__main__":
             out2.write("sleep $number\n")
             outputfile = outputfilename + "_job" + str(numberofjobs) +".root"
             out2.write("xrdcp -f /tmp/sani/" + outputfile + " root://eoscms//eos/cms/store/caf/user/sani/" + options.tag + "/"+outputfile+"\n")
-            out2.write("rm " + outputfile + "\n")
+            out2.write("scp /tmp/sani/" + outputfile + " lxplus422:/tmp/sani/"+outputfile+"\n")
+            #out2.write("rm " + outputfile + "\n")
             out2.close()
             os.system("chmod 775 "+options.tag+"/"+txtfilename)
             
-        os.system("bsub -q cmscaf1nd -o $PWD/"+options.tag +"/" +txtfilename+".log $PWD/"+options.tag+"/"+txtfilename)
+        #os.system("bsub -q cmscaf1nd -o $PWD/"+options.tag +"/" +txtfilename+".log $PWD/"+options.tag+"/"+txtfilename)
 
     

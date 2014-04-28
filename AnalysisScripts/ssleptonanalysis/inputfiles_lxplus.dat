@@ -1,0 +1,45 @@
+intL=19730 histfile=out.root output=schifo.root
+
+typ=14  ind=1 lum=1.0e10  scal=1. CaDir=/store/caf/user/sani/TTWWJets	        	kfac=1.0 xsec=0.002037   Nam=TTWWJets	      
+
+typ=1   ind=1 lum=1.0e10  scal=1. CaDir=/store/caf/user/sani/DY                 	kfac=1.0 xsec=3532.8     Nam=DY 
+typ=2   ind=1 lum=1.0e10  scal=1. CaDir=/store/caf/user/sani/DYlowMass	         	kfac=1.0 xsec=3532.8     Nam=DYlowMass	      
+typ=10  ind=1 lum=1.0e10  scal=1. CaDir=/store/caf/user/sani/TTJets	         	kfac=1.0 xsec=225.2      Nam=TTJets	      
+typ=11  ind=1 lum=1.0e10  scal=1. CaDir=/store/caf/user/sani/TTZJets	         	kfac=1.0 xsec=0.2057     Nam=TTZJets	      
+typ=12  ind=1 lum=1.0e10  scal=1. CaDir=/store/caf/user/sani/TTWJets	         	kfac=1.0 xsec=0.232      Nam=TTWJets	      
+typ=13  ind=1 lum=1.0e10  scal=1. CaDir=/store/caf/user/sani/TTGJets	         	kfac=1.0 xsec=2.166      Nam=TTGJets	      
+
+typ=15  ind=1 lum=1.0e10  scal=1. CaDir=/store/caf/user/sani/TBZToLL	         	kfac=1.0 xsec=0.0114     Nam=TBZToLL	      
+     
+typ=20  ind=1 lum=1.0e10  scal=1. CaDir=/store/caf/user/sani/ZZZNoGstarJets       	kfac=1.0 xsec=0.005527   Nam=ZZZNoGstarJets      
+typ=21  ind=1 lum=1.0e10  scal=1. CaDir=/store/caf/user/sani/ZZJetsTo4L	         	kfac=1.0 xsec=0.1769     Nam=ZZJetsTo4L	      
+
+typ=30  ind=1 lum=1.0e10  scal=1. CaDir=/store/caf/user/sani/WZJetsTo3LNu		kfac=1.0 xsec=1.0575     Nam=WZJetsTo3LNu	      
+typ=31  ind=1 lum=1.0e10  scal=1. CaDir=/store/caf/user/sani/WWGJets	         	kfac=1.0 xsec=0.528      Nam=WWGJets	      
+typ=32  ind=1 lum=1.0e10  scal=1. CaDir=/store/caf/user/sani/WWZNoGstarJets       	kfac=1.0 xsec=0.05795    Nam=WWZNoGstarJets      
+typ=33  ind=1 lum=1.0e10  scal=1. CaDir=/store/caf/user/sani/WZZNoGstarJets       	kfac=1.0 xsec=0.01968    Nam=WZZNoGstarJets      
+typ=34  ind=1 lum=1.0e10  scal=1. CaDir=/store/caf/user/sani/WpWpqq	         	kfac=1.0 xsec=0.2482     Nam=WpWpqq	      
+typ=35  ind=1 lum=1.0e10  scal=1. CaDir=/store/caf/user/sani/WmWmqq	         	kfac=1.0 xsec=0.08888    Nam=WmWmqq	      
+#typ=36  ind=1 lum=1.0e10 scal=1. CaDir=/store/caf/user/sani/WW_DoubleScattering   	kfac=1.0   xsec=0.5879     Nam=WW_DoubleScattering 
+typ=37  ind=1 lum=1.0e10 scal=1. CaDir=/store/caf/user/sani/WGstarToLNu2Mu     	 	kfac=1.0 xsec=1.914      Nam=WGstarToLNu2Mu      
+typ=38  ind=1 lum=1.0e10 scal=1. CaDir=/store/caf/user/sani/WGstarToLNu2Tau       	kfac=1.0 xsec=0.336      Nam=WGstarToLNu2Tau     
+typ=39  ind=1 lum=1.0e10 scal=1. CaDir=/store/caf/user/sani/WWWJets	         	kfac=1.0 xsec=0.08058    Nam=WWWJets	             
+     
+typ=40  ind=1 lum=1.0e10 scal=1. CaDir=/store/caf/user/sani/WH_ZH_TTH_HToWW       	kfac=1.0 xsec=0.2604     Nam=WH_ZH_TTH_HToWW     
+typ=41  ind=1 lum=1.0e10 scal=1. CaDir=/store/caf/user/sani/WH_ZH_TTH_HToZZ       	kfac=1.0 xsec=0.0320     Nam=WH_ZH_TTH_HToZZ     
+typ=42  ind=1 lum=1.0e10 scal=1. CaDir=/store/caf/user/sani/WH_ZH_TTH_HToTauTau   	kfac=1.0 xsec=0.0177     Nam=WH_ZH_TTH_HToTauTau 
+     
+typ=50  ind=1 lum=1.0e10 scal=1. CaDir=/store/caf/user/sani/WJetsLNu200_250       	kfac=1.0 xsec=90.27      Nam=WJetsLNu200_250     
+typ=51  ind=1 lum=1.0e10 scal=1. CaDir=/store/caf/user/sani/WJetsLNu250_300       	kfac=1.0 xsec=48.01      Nam=WJetsLNu250_300     
+typ=52  ind=1 lum=1.0e10 scal=1. CaDir=/store/caf/user/sani/WJetsLNu300_400       	kfac=1.0 xsec=38.3       Nam=WJetsLNu300_400     
+typ=53  ind=1 lum=1.0e10 scal=1. CaDir=/store/caf/user/sani/WJetsLNu400_Inf       	kfac=1.0 xsec=25.22      Nam=WJetsLNu400_Inf     
+
+typ=-100 ind=1 lum=1.0e10 scal=1. CaDir=/store/caf/user/sani/HH                   	kfac=1.0   xsec=532      Nam=HH    
+
+
+inputBranches ssleptonanalysis/reduction_output.dat
+inputBranches ssleptonanalysis/analysis_input.dat
+plotvariables common/plotvariables_none.dat
+treevariables ssleptonanalysis/treevariables_ssleptonanalysis.dat
+
+analyzer SSLeptonAnalysis ssleptonanalysis/ssleptonanalysis.dat
